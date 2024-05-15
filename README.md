@@ -104,6 +104,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 ### 3.3 Image merge
 
 1. After identifying the attacker, merge the attackers and the laser images to generate synthetic attack images.
+   
    Currently, we can manually align the laser image with the attackers.
    We need to measure the coordinates of the center of the glasses and align the center of the laser with these coordinates.
    We hope to further develop an automatic merging process in the future.
