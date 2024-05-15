@@ -2,9 +2,10 @@
 
 ## 1. Introduction
 
-This is the official implemental code for the paper 'The Invisible Polyjuice Potion: An Effective Physical Adversarial Attack Against Face Recognition'.
-We aim to perform adversarial attacks on face recognition systems using an infrared diode embedded in the middle of glasses. We first select the most likely pairs through filters and then use attack simulation to find the precise pairs and laser current.
-And the guide the real-world attack to achieve a high success rate.
+This is the official implementation code for the paper "The Invisible Polyjuice Potion: An Effective Physical Adversarial Attack Against Face Recognition." 
+We aim to perform adversarial attacks on face recognition systems using an infrared diode embedded in the middle of glasses. 
+First, we select the most likely pairs through filters and then use attack simulation to find the precise pairs and laser current. 
+This guides the real-world attack to achieve a high success rate.
 
 ## 2. Table of Contents
 
