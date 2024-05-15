@@ -11,9 +11,8 @@ This guides the real-world attack to achieve a high success rate within a reason
 
 1. [Introduction](#1-introduction)
 2. [Content Table](#2-content-table)
-   - [Description](#21-description)
+   - [Description](#21-project-structure)
    - [Getting Started](#22-getting-started)
-   - [Models](#23-models)
 3. [Usage](#3-usage)
    - [Filters](#31-filters)
    - [Laser Signal Generation](#32-laser-signal-generation)
@@ -39,14 +38,17 @@ This guides the real-world attack to achieve a high success rate within a reason
    - **src/**  
      Contains the source code for the project.
         The project includes four main parts corresponding to the paper:
-      1. **Generating the Laser Model**: Implemented in `src/laser_generation.py`.
-      2. **Merging Images**: Implemented in `src/image_merge.py`.
-      3. **Filters Implementation**: Implemented in `src/filters.py`.
-      4. **Attack Simulation**: Implemented in `src/face_recognition.py`.
+      1. **Generating the Laser Model**: Implemented in `laser_generation.py`.
+      2. **Merging Images**: Implemented in `image_merge.py`.
+      3. **Filters Implementation**: Implemented in `filters.py`.
+      4. **Attack Simulation**: Implemented in `face_recognition.py`.
    
    #### Tests
    - **tests/**  
      Includes tests that are used for the paper.
+      1. **Black-box Test**: Implemented in `celebritie_recognition.py`.
+      2. **Continual Attack**: Implemented in `continual_attack.py`.
+      3. **DoS and Dodging**: Implemented in `dodgings.py`.
 
 
 ### 2.2 Getting Started
@@ -114,6 +116,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 1. Run 'src/face_recognition.py' to test the face recognition results with the synthetic attackers and the targets in the 'selected_data' folder from [3.1 Filters](#22-getting-started).
 2. The results will be saved in the 'results.csv' file.
 3. Get the successful attacker and target pair, and imformed laser's current range.
+4. Testing with Amazon ReKognition and continual attacks are in the 'tests/' folder.
 
 ## 4. Acknowledgment
 
@@ -122,6 +125,8 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 Due to IRB requirements, we cannot publicly share attacker images. If you need access, please contact us by email.
 
 ### 4.2 Citation
+
+
 
 
 
