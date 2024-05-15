@@ -12,6 +12,11 @@ This is the official implemental code for the paper 'The Invisible Polyjuice Pot
    - [Getting Started](#22-getting-started)
    - [Models](#23-models)
 3. [Usage](#3-usage)
+   - [Filters](#31-filters)
+   - [Laser Signal Generation](#32-laser-signal-generation)
+   - [Image Merge](#33-image-merge)
+   - [Attack Simulation](#34-attack-simulation)
+4. [Acknowledgement](#4-acknowledgment)
 
 ### 2.1 Description
 
@@ -34,6 +39,15 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/project-title.git
+2. Navigate to the project directory:
+   ```bash
+   cd project-title
+3. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+
+### 2.3 Models
+for the models used, can be downloaded from xxx.
 
 
 ## 3. Usage
@@ -72,9 +86,19 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 ### 3.4 Attack simulation
 
-1. Run 'src/face_recognition.py' to test the face recognition results with the synthetic attackers and the targets in the 'selected_data' folder from 3.1
+1. Run 'src/face_recognition.py' to test the face recognition results with the synthetic attackers and the targets in the 'selected_data' folder from [3.1 Filters](#22-getting-started)
 
 2. Get the successful attacker and target pair and the laser current range.
+
+## 4. Acknowledgment
+
+### 4.1 Attacker images on request
+
+Due to IRB requirements, we cannot publicly share attacker images. If you need access, please contact us by email.
+
+### 4.2 Citation
+
+
 
 
 
