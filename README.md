@@ -3,6 +3,8 @@
 ## 1. Introduction
 
 This is the official implemental code for the paper 'The Invisible Polyjuice Potion: An Effective Physical Adversarial Attack Against Face Recognition'.
+We aim to perform adversarial attacks on face recognition systems using an infrared diode embedded in the middle of glasses. We first select the most likely pairs through filters and then use attack simulation to find the precise pairs and laser current.
+And the guide the real-world attack to achieve a high success rate.
 
 ## 2. Table of Contents
 
@@ -23,7 +25,7 @@ This is the official implemental code for the paper 'The Invisible Polyjuice Pot
 The project includes four main parts:
 1. **Generating the Laser Model**: Implemented in `src/laser_generation.py`.
 2. **Merging Images**: Implemented in `src/image_merge.py`.
-3. **Filter Implementation**: Implemented in `src/filters.py`.
+3. **Filters Implementation**: Implemented in `src/filters.py`.
 4. **Attack Simulation**: Implemented in `src/face_recognition.py`.
 
 ### 2.2 Getting Started
@@ -47,7 +49,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    pip install -r requirements.txt
 
 ### 2.3 Models
-for the models used, can be downloaded from xxx.
+The models used can be found in the Models folder.
 
 
 ## 3. Usage
