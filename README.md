@@ -18,6 +18,7 @@ This guides the real-world attack to achieve a high success rate within a reason
    - [Laser Signal Generation](#32-laser-signal-generation)
    - [Image Merge](#33-image-merge)
    - [Attack Simulation](#34-attack-simulation)
+   - [Other attacks](#35-other-tests)
 4. [Acknowledgement](#4-acknowledgment)
 
 ### 2.1 Project Structure
