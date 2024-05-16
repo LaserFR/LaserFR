@@ -24,7 +24,8 @@ This guides the real-world attack to achieve a high success rate within a reason
 
    #### Data
    - **data/**  
-     Contains the original and simulated images of attackers and the targets.
+     Contains the original and simulated images of attackers and the the original targets.
+     And the laser images and the real-world captured images.
    
    #### Models
    - **models/**  
@@ -33,6 +34,10 @@ This guides the real-world attack to achieve a high success rate within a reason
    #### Selected Data
    - **selected_data/**  
      Includes images that the filters have filtered out.
+
+   #### Results
+   - **results/**  
+     Save the results for different attacks.
    
    #### Source Code
    - **src/**  
@@ -105,8 +110,8 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 1. After identifying the attacker, merge the attackers and the laser images to generate synthetic attack images.
    
-   Currently, we can manually align the laser image with the attackers.
-   We need to measure the coordinates of the center of the glasses and align the center of the laser with these coordinates.
+   Currently, we need to align the laser image with the attackers manually.
+   We need to measure the coordinates of the glasses' center and align the laser's center with these coordinates.
    We hope to further develop an automatic merging process in the future.
    
 3. The synthetic attackers named with the attackers' names and the current values will be saved in the 'data/synthetic_images' folder.
@@ -115,9 +120,21 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 ### 3.4 Attack simulation
 
 1. Run 'src/face_recognition.py' to test the face recognition results with the synthetic attackers and the targets in the 'selected_data' folder from [3.1 Filters](#22-getting-started).
-2. The results will be saved in the 'results.csv' file.
-3. Get the successful attacker and target pair, and imformed laser's current range.
-4. Testing with Amazon ReKognition and continual attacks are in the 'tests/' folder.
+   
+2. The results will be saved in the 'results/impersonation_results.csv' file.
+
+   The results contain 4 columns, 'identity' is the targets identified, 'attacker' is the attacker's name, and 'laser setting' is the informed laser current range.
+   
+### 3.5 Other Tests
+
+1. Run 'tests/celebritie_recognition.py' to test the black-box attack against Amazon Recognition.
+   
+   To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). The results will be saved in 'results/celeb_results.csv'.
+
+2. Run 'tests/continual_attack.py' to test the continual attack.
+
+3. Run 'tests/dodging.py' to test the dodging/DoS attack.
+  
 
 ## 4. Acknowledgment
 
