@@ -55,7 +55,10 @@ This guides the real-world attack to achieve a high success rate within a reason
 
 #### Prerequisites
 
-- List any software or libraries that need to be installed before using the project.
+- We tested our attack using [FaceNet](https://github.com/davidsandberg/facenet), [facenet-pytorch](https://github.com/timesler/facenet-pytorch), and [DeepFace](https://github.com/serengil/deepface).
+  Please install these libraries first by running the following command:
+  ```bash
+   pip install facenet facenet-pytorch deepface
 
 #### Installation
 
