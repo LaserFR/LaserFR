@@ -99,26 +99,27 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 1. Input the parameters for the laser and camera in the `laser_generation.py`.
 
-| Parameter        | Description                                   | Example Value         |
-|------------------|-----------------------------------------------|-----------------------|
-| **LaserModel**   |                                               |                       |
-| `P`              | Power of the laser in mW                      | 100.0                 |
-| `wavelength`     | Wavelength of the laser light in meters       | 0.000000785 (785 nm)  |
-| `theta`          | Divergence angle in radians                   | 0.1745                |
-| `n`              | Refractive index                              | 1.5                   |
-| `d`              | Distance from aperture to the lens in meters  | 0.004                 |
-| `f`              | Focal length in meters                        | 0.013                 |
-| `z`              | Distance from the beam waist in meters        | 0.35                  |
-| `t`              | Lens thickness in meters                      | 0.003                 |
-| `r_a`            | Aperture radius in meters                     | 0.0072                |
-| **CMOSSensor**   |                                               |                       |
-| `width`          | Width of the CMOS sensor in meters            | 0.004                 |
-| `height`         | Height of the CMOS sensor in meters           | 0.003                 |
-| `pixel_size`     | Size of a single pixel in meters              | 1e-6 (1.0 µm)         |
-| `QE_r`           | Quantum Efficiency for the red channel        | 0.33                  |
-| `QE_g`           | Quantum Efficiency for the green channel      | 0.2                   |
-| `QE_b`           | Quantum Efficiency for the blue channel       | 0.08                  |
-| `exposure_time`  | Exposure time in seconds                      | 1.0/30                |
+   
+      | Parameter        | Description                                   | Example Value         |
+      |------------------|-----------------------------------------------|-----------------------|
+      | **LaserModel**   |                                               |                       |
+      | `P`              | Power of the laser in mW                      | 100.0                 |
+      | `wavelength`     | Wavelength of the laser light in meters       | 0.000000785 (785 nm)  |
+      | `theta`          | Divergence angle in radians                   | 0.1745                |
+      | `n`              | Refractive index                              | 1.5                   |
+      | `d`              | Distance from aperture to the lens in meters  | 0.004                 |
+      | `f`              | Focal length in meters                        | 0.013                 |
+      | `z`              | Distance from the beam waist in meters        | 0.35                  |
+      | `t`              | Lens thickness in meters                      | 0.003                 |
+      | `r_a`            | Aperture radius in meters                     | 0.0072                |
+      | **CMOSSensor**   |                                               |                       |
+      | `width`          | Width of the CMOS sensor in meters            | 0.004                 |
+      | `height`         | Height of the CMOS sensor in meters           | 0.003                 |
+      | `pixel_size`     | Size of a single pixel in meters              | 1e-6 (1.0 µm)         |
+      | `QE_r`           | Quantum Efficiency for the red channel        | 0.33                  |
+      | `QE_g`           | Quantum Efficiency for the green channel      | 0.2                   |
+      | `QE_b`           | Quantum Efficiency for the blue channel       | 0.08                  |
+      | `exposure_time`  | Exposure time in seconds                      | 1.0/30                |
 
    
 2. Run the `laser_generation.py` with the current value range and intervals.
@@ -134,7 +135,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    We need to measure the coordinates of the glasses' center and align the laser's center with these coordinates.
    We hope to further develop an automatic merging process in the future.
    
-3. The synthetic attackers named with the attackers' names and the current values will be saved in the `data/synthetic_images` folder.
+3. The synthetic attackers named with the attackers' names and the current values will be saved in the `data/synthetic_attackers` folder.
 
 
 ### 3.4 Attack simulation
