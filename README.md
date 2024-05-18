@@ -55,7 +55,7 @@ This guides the real-world attack to achieve a high success rate within a reason
 
 #### Prerequisites
 
-- We tested our attack using [FaceNet](https://github.com/davidsandberg/facenet), [facenet-pytorch](https://github.com/timesler/facenet-pytorch), and [DeepFace](https://github.com/serengil/deepface).
+- We tested our attack using [FaceNet](https://github.com/davidsandberg/facenet), [facenet-pytorch](https://github.com/timesler/facenet-pytorch), and [deepface](https://github.com/serengil/deepface).
   Please install these libraries first by running the following command:
   ```bash
    pip install facenet facenet-pytorch deepface
