@@ -23,24 +23,19 @@ This guides the real-world attack to achieve a high success rate within a reason
 
 ### 2.1 Project Structure
 
-   #### Data
    - **data/**  
      Contains the original and simulated images of attackers and the the original targets.
      And the laser images and the real-world captured images.
    
-   #### Models
    - **models/**  
      Stores the model parameters used in the project.
    
-   #### Selected Data
    - **selected_data/**  
      Includes images that the filters have filtered out.
 
-   #### Results
    - **results/**  
      Save the results for different attacks.
    
-   #### Source Code
    - **src/**  
      Contains the source code for the project.
         The project includes four main parts corresponding to the paper:
@@ -49,7 +44,6 @@ This guides the real-world attack to achieve a high success rate within a reason
       3. **Filters Implementation**: Implemented in `filters.py`.
       4. **Attack Simulation**: Implemented in `face_recognition.py`.
    
-   #### Tests
    - **tests/**  
      Includes tests that are used for the paper.
       1. **Black-box Test**: Implemented in `celebritie_recognition.py`.
@@ -92,19 +86,41 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 2. Run
 
-   - For untargeted impersonation, place one attacker in the 'theOne' folder, and the targets in the 'theMany' folder. Run 'scr/filters.py'. The filtered targets will be copied to the 'selected_data' folder.
+   - For untargeted impersonation, place one attacker in the `theOne` folder, and the targets in the `theMany` folder. Run `scr/filters.py`. The filtered targets will be copied to the `selected_data` folder.
    
-   - For targeted impersonation, place the targeted person in the 'theOne' folder. Run 'scr/filters.py'. The potential attackers will be copied to the 'selected_data' folder.
+   - For targeted impersonation, place the targeted person in the `theOne` folder, and the attackers in the `theMany` folder. Run `scr/filters.py`. The potential attackers will be copied to the `selected_data` folder.
    
-   - Multiple analyses at one time are supported. The corresponding results will be placed in subfolders named after the attackers/targets from the 'theOne' folder.
+   - Multiple analyses at one time are supported. The corresponding results will be placed in subfolders named after the attackers/targets from the `theOne` folder.
 
 ### 3.2 Laser signal generation
 
-1. Input the parameters for the laser and camera in the 'laser_generation.py'.
+1. Input the parameters for the laser and camera in the `laser_generation.py`.
+
+| Parameter        | Description                                   | Example Value         |
+|------------------|-----------------------------------------------|-----------------------|
+| **LaserModel**   |                                               |                       |
+| `P`              | Power of the laser in mW                      | 100.0                 |
+| `wavelength`     | Wavelength of the laser light in meters       | 0.000000785 (785 nm)  |
+| `theta`          | Divergence angle in radians                   | 0.1745                |
+| `n`              | Refractive index                              | 1.5                   |
+| `d`              | Distance from aperture to the lens in meters  | 0.004                 |
+| `f`              | Focal length in meters                        | 0.013                 |
+| `z`              | Distance from the beam waist in meters        | 0.35                  |
+| `t`              | Lens thickness in meters                      | 0.003                 |
+| `r_a`            | Aperture radius in meters                     | 0.0072                |
+| **CMOSSensor**   |                                               |                       |
+| `width`          | Width of the CMOS sensor in meters            | 0.004                 |
+| `height`         | Height of the CMOS sensor in meters           | 0.003                 |
+| `pixel_size`     | Size of a single pixel in meters              | 1e-6 (1.0 µm)         |
+| `QE_r`           | Quantum Efficiency for the red channel        | 0.33                  |
+| `QE_g`           | Quantum Efficiency for the green channel      | 0.2                   |
+| `QE_b`           | Quantum Efficiency for the blue channel       | 0.08                  |
+| `exposure_time`  | Exposure time in seconds                      | 1.0/30                |
+
    
-2. Run the 'laser_generation.py' with the current value range and intervals.
+2. Run the `laser_generation.py` with the current value range and intervals.
    
-3. The generated laser image named with current values will be saved in the 'data/laser_images' folder.
+3. The generated laser image named with current values will be saved in the `data/laser_images` folder.
    
 
 ### 3.3 Image merge
@@ -115,26 +131,26 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    We need to measure the coordinates of the glasses' center and align the laser's center with these coordinates.
    We hope to further develop an automatic merging process in the future.
    
-3. The synthetic attackers named with the attackers' names and the current values will be saved in the 'data/synthetic_images' folder.
+3. The synthetic attackers named with the attackers' names and the current values will be saved in the `data/synthetic_images` folder.
 
 
 ### 3.4 Attack simulation
 
-1. Run 'src/face_recognition.py' to test the face recognition results with the synthetic attackers and the targets in the 'selected_data' folder from [3.1 Filters](#22-getting-started).
+1. Run `src/face_recognition.py` to test the face recognition results with the synthetic attackers and the targets in the `selected_data` folder from [3.1 Filters](#22-getting-started).
    
-2. The results will be saved in the 'results/impersonation_results.csv' file.
+2. The results will be saved in the `results/impersonation_results.csv` file.
 
    The results contain 4 columns, 'identity' is the targets identified, 'attacker' is the attacker's name, and 'laser setting' is the informed laser current range.
    
 ### 3.5 Other Tests
 
-1. Run 'tests/celebritie_recognition.py' to test the black-box attack against Amazon Recognition.
+1. Run `tests/celebritie_recognition.py` to test the black-box attack against Amazon Recognition.
    
-   To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). The results will be saved in 'results/celeb_results.csv'.
+   To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). The results will be saved in `results/celeb_results.csv`.
 
-2. Run 'tests/continual_attack.py' to test the continual attack.
+2. Run `tests/continual_attack.py` to test the continual attack.
 
-3. Run 'tests/dodging.py' to test the dodging/DoS attack.
+3. Run `tests/dodging.py` to test the dodging/DoS attack.
   
 
 ## 4. Acknowledgment
