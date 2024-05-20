@@ -105,7 +105,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
       | **LaserModel**   |                                               |                       |
       | `P`              | Power of the laser in mW                      | 100.0                 |
       | `wavelength`     | Wavelength of the laser light in meters       | 0.000000785 (785 nm)  |
-      | `theta`          | Divergence angle in radians                   | 0.1745                |
+      | `theta`          | Divergence angle in radians                   | 0.028                 |
       | `n`              | Refractive index                              | 1.5                   |
       | `d`              | Distance from aperture to the lens in meters  | 0.004                 |
       | `f`              | Focal length in meters                        | 0.013                 |
