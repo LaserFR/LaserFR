@@ -1,95 +1,104 @@
-import numpy as np
 import cv2
+import numpy as np
+import os
 
 
-class ImageProcessor:
-    def __init__(self, lambda_r, lambda_g, lambda_b, alpha=255, brightness_ratio=1.0):
-        self.lambda_r = lambda_r
-        self.lambda_g = lambda_g
-        self.lambda_b = lambda_b
+class LaserFaceMerger:
+    def __init__(self, alpha=255, laser_intensity=1.0):
         self.alpha = alpha
-        self.brightness_ratio = brightness_ratio
+        self.laser_intensity = laser_intensity
 
-    def color_translation(self, power):
-        """Translate power P to RGB values based on the QEs."""
-        y_r = self.relu(power * self.lambda_r)
-        y_g = self.relu(power * self.lambda_g)
-        y_b = self.relu(power * self.lambda_b)
-        return np.stack((y_r, y_g, y_b), axis=-1)
+    @staticmethod
+    def relu_like(x, alpha=255):
+        return np.minimum(x, alpha)
 
-    def relu(self, x):
-        """ReLU-like function to handle pixel saturation."""
-        return np.minimum(x, self.alpha)
+    def merge_laser_face(self, face_image, laser_image, center_coords):
+        face_h, face_w = face_image.shape[:2]
+        laser_h, laser_w = laser_image.shape[:2]
+        center_x, center_y = center_coords
 
-    def apply_laser_perturbation(self, input_image, laser_power):
-        """Apply laser perturbation and handle pixel saturation."""
-        laser_signal = self.color_translation(laser_power)
-        perturbed_image = self.relu(input_image + laser_signal)
-        return perturbed_image
+        # Calculate the top-left corner of the laser image to be placed
+        start_x = max(center_x - laser_w // 2, 0)
+        start_y = max(center_y - laser_h // 2, 0)
 
-    def adjust_brightness(self, synthetic_image, p_o, p_a):
-        """Adjust brightness of the synthetic image based on real-world camera exposure."""
-        r_b = p_o / (p_o + p_a)
-        return synthetic_image * r_b
+        end_x = min(start_x + laser_w, face_w)
+        end_y = min(start_y + laser_h, face_h)
 
-    def process_image(self, input_image, laser_power, p_o, p_a):
-        """Process the image by applying laser perturbation and adjusting brightness."""
-        # Apply laser perturbation
-        perturbed_image = self.apply_laser_perturbation(input_image, laser_power)
+        # Calculate the region of the face image to be merged with the laser image
+        face_region_x = slice(start_x, end_x)
+        face_region_y = slice(start_y, end_y)
+
+        # Calculate the region of the laser image to be merged with the face image
+        laser_region_x = slice(0, end_x - start_x)
+        laser_region_y = slice(0, end_y - start_y)
+
+        # Merge the cropped laser image with the face image using addWeighted
+        for c in range(3):  # For each channel
+            face_image[face_region_y, face_region_x, c] = \
+                self.relu_like(
+                    cv2.addWeighted(
+                        face_image[face_region_y, face_region_x, c],
+                        1,
+                        laser_image[laser_region_y, laser_region_x, c],
+                        self.laser_intensity,
+                        0
+                    ),
+                    self.alpha
+                )
+
+        return face_image
+
+    def adjust_brightness(self, image, face_image):
+        P_o = np.mean(face_image)  # Power of the original face image
+        P_a = self.laser_intensity  # Power of the laser intensity
+
+        r_b = P_o / (P_o + P_a)
+
         # Adjust brightness
-        final_image = self.adjust_brightness(perturbed_image, p_o, p_a)
-        return final_image
+        adjusted_img = cv2.convertScaleAbs(image, alpha=r_b, beta=0)
+        return adjusted_img
 
-    def laser_shape_adjust(self, img_laser, img_face):
-        """Adjust the shape of the laser image to match the face image dimensions."""
-        height_laser, width_laser, _ = img_laser.shape
-        height_face, width_face, _ = img_face.shape
-        laser_cropped = img_laser[height_laser // 2 - width_face // 2:height_laser // 2 + width_face // 2,
-                        width_laser // 2 - width_face // 2:width_laser // 2 + width_face // 2]
-        return laser_cropped
+    def simulate_laser_attack(self, face_image_path, laser_images_path, center_coords, output_folder):
+        # Load face image
+        face_img = cv2.imread(face_image_path)
 
-    def simple_add(self, base_img, light_pattern):
-        """Add the light pattern to the base image with given alpha and beta parameters."""
-        return cv2.addWeighted(base_img, self.alpha, light_pattern, self.beta, 0)
+        # Ensure output folder exists
+        os.makedirs(output_folder, exist_ok=True)
 
-    def coordinate(self, center_x, center_y, base_img, added_img):
-        """Overlay images at specific coordinates."""
-        rows_base, cols_base, channel = base_img.shape
-        rows_laser, cols_laser, channel_laser = added_img.shape
-        new_image = np.zeros((rows_base + rows_laser, cols_base + cols_laser, channel), dtype=base_img.dtype)
-        new_image2 = np.zeros((rows_base + rows_laser, cols_base + cols_laser, channel), dtype=base_img.dtype)
+        # Iterate over all laser images in the laser_images_path directory
+        for laser_image_name in os.listdir(laser_images_path):
+            laser_image_path = os.path.join(laser_images_path, laser_image_name)
+            laser_img = cv2.imread(laser_image_path)
 
-        new_image[rows_laser // 2: rows_base + rows_laser // 2, cols_laser // 2: cols_base + cols_laser // 2] = base_img
-        new_image2[center_y: center_y + rows_laser, center_x: center_x + cols_laser] = added_img
+            if laser_img is None:
+                continue  # Skip files that are not images
 
-        base_img_roi = cv2.add(new_image, new_image2)
-        base_img_roi[base_img_roi > 255] = 255
+            # Resize laser image to match the width of the face image
+            laser_img_resized = cv2.resize(laser_img, (
+            face_img.shape[1], int(laser_img.shape[0] * face_img.shape[1] / laser_img.shape[1])))
 
-        laser_face = np.zeros(base_img.shape, dtype=base_img.dtype)
-        laser_face[:, :] = base_img_roi[rows_laser // 2: rows_base + rows_laser // 2,
-                           cols_laser // 2: cols_base + cols_laser // 2]
+            # Merge and adjust brightness
+            merged_image = self.merge_laser_face(face_img.copy(), laser_img_resized, center_coords)
+            final_image = self.adjust_brightness(merged_image, face_img)
 
-        return laser_face
+            # Create output file name
+            face_image_name = os.path.basename(face_image_path)
+            output_image_name = f"{os.path.splitext(face_image_name)[0]}_{os.path.splitext(laser_image_name)[0]}.jpg"
+            output_image_path = os.path.join(output_folder, output_image_name)
+
+            # Save the result
+            cv2.imwrite(output_image_path, final_image)
+
+        print(f"Output images saved to: {output_folder}")
 
 
-if __name__ == '__main__':
+# Example usage
+face_image_path = '../data/attackers'
+laser_images_path = '../data/laser_images'
+center_coords = (545, 973)  # Center coordinates (x, y) of face image
+output_folder = '../data/synthetic_attackers'
+for face_image_name in os.listdir(face_image_path):
+    full_face_image_path = os.path.join(face_image_path, face_image_name)
 
-    lambda_r = 0.9
-    lambda_g = 0.8
-    lambda_b = 0.7
-    image_processor = ImageProcessor(lambda_r, lambda_g, lambda_b, alpha=255, brightness_ratio=1.0)
-
-    # Example image loading (you need to load images using OpenCV or any other library)
-    img_face = cv2.imread('path_to_face_image')
-    img_laser = cv2.imread('path_to_laser_image')
-
-    # Define the power of the laser and input image
-    laser_power = 1.0  # Example value
-    p_o = 100  # Example value for power of input image
-    p_a = 50  # Example value for laser intensity
-
-    # Process the image
-    final_image = image_processor.process_image(img_face, laser_power, p_o, p_a)
-
-    # Save or display the final image as needed
-    cv2.imwrite('path_to_save_final_image', final_image)
+merger = LaserFaceMerger(alpha=255, laser_intensity=1.0)
+merger.simulate_laser_attack(full_face_image_path, laser_images_path, center_coords, output_folder)
