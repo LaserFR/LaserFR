@@ -5,12 +5,13 @@ import os
 import math
 import pickle
 from sklearn.svm import SVC
+from PIL import Image
 
 
 class FaceClassifier:
     def __init__(self, data_dir, model, classifier_filename, use_split_dataset=False,
                  test_data_dir=None, mode='TRAIN', batch_size=10, image_size=160, seed=666,
-                 min_nrof_images_per_class=1, nrof_train_images_per_class=1):
+                 min_nrof_images_per_class=10, nrof_train_images_per_class=5):
         self.data_dir = data_dir
         self.model = model
         self.classifier_filename = classifier_filename
@@ -23,21 +24,34 @@ class FaceClassifier:
         self.nrof_train_images_per_class = nrof_train_images_per_class
         self.mode = mode
 
-        self.dataset = None
+        self.train_set = None
+        self.test_set = None
         self.class_names = None
+        self.probability_threshold = None
 
-        # Disable eager execution and use TensorFlow 1.x compatibility mode
         tf.compat.v1.disable_eager_execution()
 
-    def load_dataset(self):
-        if self.use_split_dataset:
-            dataset_tmp = facenet.get_dataset(self.data_dir)
-            train_set, test_set = self.split_dataset(dataset_tmp)
-            self.dataset = train_set if self.mode == 'TRAIN' else test_set
-        else:
-            self.dataset = facenet.get_dataset(self.data_dir)
+    def is_image_file(self, file_path):
+        try:
+            img = Image.open(file_path)
+            img.verify()  # Verify that it is, in fact, an image
+            return True
+        except (IOError, SyntaxError):
+            return False
 
-        for cls in self.dataset:
+    def load_dataset(self):
+        dataset_tmp = facenet.get_dataset(self.data_dir)
+        for cls in dataset_tmp:
+            cls.image_paths = [path for path in cls.image_paths if self.is_image_file(path)]
+        filtered_dataset = [cls for cls in dataset_tmp if
+                            len(cls.image_paths) >= self.min_nrof_images_per_class]  # Modified to filter dataset
+        if self.use_split_dataset:
+            self.train_set, self.test_set = self.split_dataset(filtered_dataset)
+        else:
+            self.train_set = filtered_dataset
+            self.test_set = filtered_dataset# Modified to use filtered dataset
+
+        for cls in self.train_set:
             assert len(cls.image_paths) > 0, 'There must be at least one image for each class in the dataset'
 
     def split_dataset(self, dataset):
@@ -78,7 +92,7 @@ class FaceClassifier:
                 np.random.seed(seed=self.seed)
                 self.load_dataset()
 
-                paths, labels = facenet.get_image_paths_and_labels(self.dataset)
+                paths, labels = facenet.get_image_paths_and_labels(self.train_set)
                 facenet.load_model(self.model)
 
                 emb_array = self.calculate_embeddings(sess, paths)
@@ -86,11 +100,14 @@ class FaceClassifier:
                 model = SVC(kernel='linear', probability=True)
                 model.fit(emb_array, labels)
 
-                self.class_names = [cls.name.replace('_', ' ') for cls in self.dataset]
+                self.class_names = [cls.name.replace('_', ' ') for cls in self.train_set]
 
                 with open(self.classifier_filename, 'wb') as outfile:
                     pickle.dump((model, self.class_names), outfile)
                 print(f'Saved classifier model to file "{self.classifier_filename}"')
+
+                self.probability_threshold = np.min(model.predict_proba(emb_array))  # Set probability threshold
+                print(f'Set probability threshold to {self.probability_threshold}')  # Print threshold
 
     def classify(self):
         with tf.compat.v1.Graph().as_default():
@@ -98,7 +115,7 @@ class FaceClassifier:
                 np.random.seed(seed=self.seed)
                 self.load_dataset()
 
-                paths, labels = facenet.get_image_paths_and_labels(self.dataset)
+                paths, labels = facenet.get_image_paths_and_labels(self.test_set)
                 facenet.load_model(self.model)
 
                 emb_array = self.calculate_embeddings(sess, paths)
@@ -117,57 +134,75 @@ class FaceClassifier:
                 print(f'Accuracy: {accuracy:.3f}')
 
     def classify_attackers_and_retrain(self, attackers_dir):
-        with tf.compat.v1.Graph().as_default():
-            with tf.compat.v1.Session() as sess:
-                np.random.seed(seed=self.seed)
-                self.load_dataset()
+        round_counter = 0
+        all_classified = False
 
-                # Load the model
-                facenet.load_model(self.model)
+        while not all_classified:
+            round_counter += 1
+            with tf.compat.v1.Graph().as_default():
+                with tf.compat.v1.Session() as sess:
+                    np.random.seed(seed=self.seed)
+                    self.load_dataset()
 
-                # Load attacker images
-                attackers_dataset = facenet.get_dataset(attackers_dir)
-                attacker_paths, _ = facenet.get_image_paths_and_labels(attackers_dataset)
-                attacker_embs = self.calculate_embeddings(sess, attacker_paths)
+                    facenet.load_model(self.model)
 
-                # Load classifier
-                with open(self.classifier_filename, 'rb') as infile:
-                    model, self.class_names = pickle.load(infile)
+                    attackers_dataset = facenet.get_dataset(attackers_dir)
+                    for cls in attackers_dataset:
+                        cls.image_paths = [path for path in cls.image_paths if self.is_image_file(path)]
+                    attacker_paths, _ = facenet.get_image_paths_and_labels(attackers_dataset)
+                    attacker_embs = self.calculate_embeddings(sess, attacker_paths)
 
-                predictions = model.predict_proba(attacker_embs)
-                best_class_indices = np.argmax(predictions, axis=1)
-                best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
+                    with open(self.classifier_filename, 'rb') as infile:
+                        model, self.class_names = pickle.load(infile)
 
-                new_samples = []
-                new_labels = []
+                    predictions = model.predict_proba(attacker_embs)
+                    best_class_indices = np.argmax(predictions, axis=1)
+                    best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
 
-                for i, (index, probability) in enumerate(zip(best_class_indices, best_class_probabilities)):
-                    if probability > 0.012:  # Threshold for considering the classification as confident
+                    # Select one attacker to classify initially
+                    initial_attacker_index = 0
+                    initial_attacker_label = best_class_indices[initial_attacker_index]
+                    initial_attacker_confidence = best_class_probabilities[initial_attacker_index]
+
+                    if initial_attacker_confidence > self.probability_threshold:
                         print(
-                            f'Attacker {i} classified as {self.class_names[index]} with probability {probability:.3f}')
-                        new_samples.append(attacker_paths[i])
-                        new_labels.append(index)
-                    else:
-                        print(f'Attacker {i} not confidently classified')
+                            f'Initial attacker classified as {self.class_names[initial_attacker_label]} with probability {initial_attacker_confidence:.3f}')
+                        self.train_set[initial_attacker_label].image_paths.append(
+                            attacker_paths[initial_attacker_index])
 
-                if new_samples:
-                    # Add new samples to the dataset
-                    for sample, label in zip(new_samples, new_labels):
-                        for cls in self.dataset:
-                            if cls.name == self.class_names[label]:
-                                cls.image_paths.append(sample)
+                        # Retrain the classifier with the initial attacker
+                        self.train()
 
-                    # Retrain the classifier
-                    self.train()
+                        # Classify remaining attackers with the new classifier
+                        remaining_attacker_paths = attacker_paths[1:]
+                        remaining_attacker_embs = attacker_embs[1:]
+
+                        all_classified = True
+                        for i in range(len(remaining_attacker_paths)):
+                            prediction = model.predict_proba([remaining_attacker_embs[i]])
+                            best_class_index = np.argmax(prediction)
+                            best_class_probability = prediction[0][best_class_index]
+
+                            if best_class_index == initial_attacker_label and best_class_probability > self.probability_threshold:
+                                print(
+                                    f'Attacker {i + 1} classified as {self.class_names[best_class_index]} with probability {best_class_probability:.3f}')
+                                self.train_set[initial_attacker_label].image_paths.append(remaining_attacker_paths[i])
+                                all_classified = False
+
+                        # Retrain the classifier with the newly classified attackers
+                        self.train()
+
+            print(f'Retraining round {round_counter} completed')
+
+        print(f'All attackers classified in {round_counter} rounds')
 
 
 if __name__ == '__main__':
-    # Example usage
     classifier = FaceClassifier(
-        data_dir='../data/theMany',
+        data_dir='Z:\data\lfw_funneled',
         model='../Models/20180402-114759.pb',
         classifier_filename='../Models/classifier.pkl',
-        use_split_dataset=True,
+        use_split_dataset=False,
         mode='TRAIN'
     )
 
@@ -178,4 +213,4 @@ if __name__ == '__main__':
     classifier.classify()
 
     # To classify attackers and retrain the classifier
-    classifier.classify_attackers_and_retrain('../data/synthetic_attackers')
+    classifier.classify_attackers_and_retrain('../data/synthetic_attackers2')
