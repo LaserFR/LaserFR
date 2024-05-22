@@ -10,6 +10,7 @@ Other resnet models:
 | resnet101   | [resnet101-5d3b4d8f.pth](https://download.pytorch.org/models/resnet101-5d3b4d8f.pth)   |
 | resnet152   | [resnet152-b121ed2d.pth](https://download.pytorch.org/models/resnet152-b121ed2d.pth)   |
 
+For instance, the ArcFace tested is based on resnet34.
 
 
 The parameters used for FaceNet can be downloaded from the [link](https://huggingface.co/lllyasviel/Annotators/blob/main/facenet.pth), please place the 'facenet.pth' file in this folder and keep the name unchanged.
