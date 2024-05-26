@@ -1,26 +1,6 @@
-# CelebritiesRecognition Class
+# 1. CelebritiesRecognition Class
 
 This class utilizes the Amazon Rekognition service to recognize celebrities in images stored in a specified directory.
-
-## Initialization
-- **`__init__(self, path)`**:
-  - Initializes the `CelebritiesRecognition` class.
-  - Sets up a client for Amazon Rekognition.
-  - Takes a `path` parameter, which is the directory path containing the images.
-
-## Methods
-
-- **`recognize_celebrities(self, photo)`**:
-  - Recognizes celebrities in the given photo using Amazon Rekognition.
-  - Reads the image file and sends it to the Rekognition `recognize_celebrities` API.
-  - Parses the response to extract and print celebrity details such as name, ID, confidence, and related URLs.
-  - Returns the number of recognized celebrities and a list containing the photo name, celebrity name, confidence, and URLs.
-
-- **`main(self)`**:
-  - Walks through the directory specified by `self.path` to get a list of all image files.
-  - Calls the `recognize_celebrities` method for each image file.
-  - If any celebrities are detected in an image, the results are appended to a list.
-  - Converts the results list to a pandas DataFrame and saves it as a CSV file named `celeb_results.csv` in the `results` directory.
 
 ## Usage
 - **`if __name__ == '__main__':`**:
@@ -54,4 +34,46 @@ This class utilizes the Amazon Rekognition service to recognize celebrities in i
 
 - **Error Handling**:
   - The current implementation does not include error handling. It is recommended to add error handling to manage issues like network errors, unsupported file formats, etc.
+
+
+# 2. FaceClassifier Class
+
+This class uses TensorFlow and the FaceNet model to perform face recognition and classification. It can train a classifier, classify images, and iteratively classify and retrain a model on attacker images.
+
+## Usage
+- **`if __name__ == '__main__':`**:
+  - Creates an instance of the `FaceClassifier` class with the specified parameters.
+  - Calls the `train` method to train the classifier.
+  - Calls the `classify` method to classify images using the trained classifier.
+  - Calls the `classify_attackers_and_retrain` method to classify and retrain on attacker images.
+
+## Example of How to Use the Code
+
+1. **Set Up Environment**:
+   - Ensure you have TensorFlow, numpy, scikit-learn, and PIL installed.
+   - Download and place the FaceNet model in the specified path.
+
+2. **Directory Structure**:
+   - Place your images in the `data_dir` directory.
+   - Ensure the model path and classifier filename are correctly specified.
+
+3. **Run the Script**:
+   - Execute the script in a Python environment:
+     ```bash
+     python continual_attack.py
+     ```
+   - This will train the classifier, classify images, and iteratively classify and retrain on attacker images.
+
+## Important Notes
+
+- **FaceNet Model**:
+  - Ensure you have the pre-trained FaceNet model. Download it if necessary. Since FaceNet is built on TensorFlow 1.x, there may be numerous compatibility issues. Therefore, we recommend running it on a CPU instead of a GPU.
+
+- **Image Formats**:
+  - Ensure your images are in a format supported by PIL (JPEG, PNG, etc.).
+
+- **Error Handling**:
+  - The current implementation includes basic error handling for image file validation. Additional error handling may be required for robustness.
+
+
 
