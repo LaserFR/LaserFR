@@ -129,7 +129,9 @@ This script uses the DeepFace library to perform real-time face recognition usin
      ```bash
      pip install deepface
      ```
-
+2. **Replace the realtime.py file**
+    Find the realtime.py file in the 'common' folder in the deepface, and replace it with our realtime.py file to support embedding saving and loading, and a more natural face recognition approach.
+   
 2. **Prepare the Database**:
    - Place the face database in the directory specified by db_path.
 
