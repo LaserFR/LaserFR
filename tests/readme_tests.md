@@ -76,4 +76,43 @@ This class uses TensorFlow and the FaceNet model to perform face recognition and
   - The current implementation includes basic error handling for image file validation. Additional error handling may be required for robustness.
 
 
+# 3. DodgingDoS Class
+
+This class uses the MTCNN and InceptionResnetV1 models from the `facenet-pytorch` library to analyze face embeddings and detect attempts at dodging or Denial-of-Service (DoS) attacks using synthetic images.
+
+## Usage
+- **`if __name__ == '__main__':`**:
+  - Specifies the directories for original and synthetic attacker images.
+  - Creates an instance of the `DodgingDoS` class with the specified directories.
+  - Calls the `analyze_attackers` method to analyze the images and get the results.
+  - Saves the results to a CSV file using the `save_results` method.
+
+## Example of How to Use the Code
+
+1. **Set Up Environment**:
+   - Ensure you have `torch`, `facenet-pytorch`, `numpy`, `pandas`, and `PIL` installed.
+   - Ensure your images are in the specified directories.
+
+2. **Directory Structure**:
+   - Place your original attacker images in the `original_data_dir` directory.
+   - Place your synthetic attacker images in the `synthetic_data_dir` directory.
+
+3. **Run the Script**:
+   - Execute the script in a Python environment:
+     ```bash
+     python dodging.py
+     ```
+   - This will analyze the images, detect dodging and DoS attempts, and save the results to `../results/dodgingDoS.csv`.
+
+## Important Notes
+
+- **MTCNN and InceptionResnetV1 Models**:
+  - Ensure you have the `facenet-pytorch` library installed to use these models.
+
+- **Image Formats**:
+  - Ensure your images are in a format supported by PIL (JPEG, PNG, etc.).
+
+- **Threshold Value**:
+  - The threshold value for detecting dodging attempts is set to 1.424 by default, which is from the [FaceNet paper](https://arxiv.org/abs/1503.03832) (tested with LFW). Adjust this value as needed based on your requirements.
+
 
