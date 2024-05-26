@@ -12,6 +12,19 @@ class FaceClassifier:
     def __init__(self, data_dir, model, classifier_filename, use_split_dataset=False,
                  test_data_dir=None, mode='TRAIN', batch_size=10, image_size=160, seed=666,
                  min_nrof_images_per_class=10, nrof_train_images_per_class=5):
+        '''
+        :param data_dir: Directory containing the face images for training.
+        :param model: Path to the pre-trained FaceNet model
+        :param classifier_filename: Path to save the trained classifier
+        :param use_split_dataset: Flag to indicate if the dataset should be split into training and testing sets
+        :param test_data_dir: Directory for test data (optional)
+        :param mode: Mode of operation, either 'TRAIN' or 'CLASSIFY'
+        :param batch_size: Batch size for processing images.
+        :param image_size: Size of the images.
+        :param seed: Random seed for reproducibility.
+        :param min_nrof_images_per_class: Minimum number of images per class.
+        :param nrof_train_images_per_class: Number of images per class for training.
+        '''
         self.data_dir = data_dir
         self.model = model
         self.classifier_filename = classifier_filename
@@ -32,6 +45,7 @@ class FaceClassifier:
         tf.compat.v1.disable_eager_execution()
 
     def is_image_file(self, file_path):
+        # Check if the given file path is an image
         try:
             img = Image.open(file_path)
             img.verify()  # Verify that it is, in fact, an image
@@ -40,21 +54,25 @@ class FaceClassifier:
             return False
 
     def load_dataset(self):
+        # Load dataset and filter out classes with fewer images than min_nrof_images_per_class
         dataset_tmp = facenet.get_dataset(self.data_dir)
         for cls in dataset_tmp:
             cls.image_paths = [path for path in cls.image_paths if self.is_image_file(path)]
         filtered_dataset = [cls for cls in dataset_tmp if
-                            len(cls.image_paths) >= self.min_nrof_images_per_class]  # Modified to filter dataset
+                            len(cls.image_paths) >= self.min_nrof_images_per_class]
+
+        # Splits the dataset into training and testing sets if `use_split_dataset` is `True`.
         if self.use_split_dataset:
             self.train_set, self.test_set = self.split_dataset(filtered_dataset)
         else:
             self.train_set = filtered_dataset
-            self.test_set = filtered_dataset# Modified to use filtered dataset
+            self.test_set = filtered_dataset
 
         for cls in self.train_set:
             assert len(cls.image_paths) > 0, 'There must be at least one image for each class in the dataset'
 
     def split_dataset(self, dataset):
+        # Split dataset into training and testing sets
         train_set = []
         test_set = []
         for cls in dataset:
@@ -66,6 +84,7 @@ class FaceClassifier:
         return train_set, test_set
 
     def calculate_embeddings(self, sess, paths):
+        # Calculate embeddings for the the images using the FaceNet model
         images_placeholder = tf.compat.v1.get_default_graph().get_tensor_by_name("input:0")
         embeddings = tf.compat.v1.get_default_graph().get_tensor_by_name("embeddings:0")
         phase_train_placeholder = tf.compat.v1.get_default_graph().get_tensor_by_name("phase_train:0")
@@ -87,6 +106,7 @@ class FaceClassifier:
         return emb_array
 
     def train(self):
+        # Train the classifier using SVM
         with tf.compat.v1.Graph().as_default():
             with tf.compat.v1.Session() as sess:
                 np.random.seed(seed=self.seed)
@@ -102,6 +122,7 @@ class FaceClassifier:
 
                 self.class_names = [cls.name.replace('_', ' ') for cls in self.train_set]
 
+                # Saves the trained classifier to `classifier_filename`.
                 with open(self.classifier_filename, 'wb') as outfile:
                     pickle.dump((model, self.class_names), outfile)
                 print(f'Saved classifier model to file "{self.classifier_filename}"')
@@ -110,6 +131,7 @@ class FaceClassifier:
                 print(f'Set probability threshold to {self.probability_threshold}')  # Print threshold
 
     def classify(self):
+        # Classify images using the trained classifier
         with tf.compat.v1.Graph().as_default():
             with tf.compat.v1.Session() as sess:
                 np.random.seed(seed=self.seed)
@@ -134,9 +156,11 @@ class FaceClassifier:
                 print(f'Accuracy: {accuracy:.3f}')
 
     def classify_attackers_and_retrain(self, attackers_dir):
+        # Iteratively classify and retrain the classifier on attacker images
         round_counter = 0
         all_classified = False
 
+        # Continues the process until all attackers are classified.
         while not all_classified:
             round_counter += 1
             with tf.compat.v1.Graph().as_default():
@@ -199,9 +223,9 @@ class FaceClassifier:
 
 if __name__ == '__main__':
     classifier = FaceClassifier(
-        data_dir='Z:\data\lfw_funneled',
-        model='../Models/20180402-114759.pb',
-        classifier_filename='../Models/classifier.pkl',
+        data_dir='Z:\data\lfw_funneled',  # Directory for training data
+        model='../Models/20180402-114759.pb',   # Path to the pre-trained FaceNet model
+        classifier_filename='../Models/classifier.pkl',  # Path to save the trained classifier
         use_split_dataset=False,
         mode='TRAIN'
     )
