@@ -1,1 +1,0 @@
-This folder is to save the images filtered out by the filters.
