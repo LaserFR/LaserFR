@@ -50,7 +50,8 @@ This guides the real-world attack to achieve a high success rate within a reason
       2. **Continual Attack**: Implemented in `continual_attack.py`.
       3. **DoS and Dodging**: Implemented in `dodgings.py`.
       4. **Physically Real-time Test**: Implemented in `real_timeFR.py`.
-
+         
+Each directory contains a detailed README file that explains its usage. Additionally, each code file includes comments describing the code's functions and operations.
 
 ### 2.2 Getting Started
 
