@@ -156,6 +156,8 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 2. Run `tests/continual_attack.py` to test the continual attack.
 
 3. Run `tests/dodging.py` to test the dodging/DoS attack.
+   
+4. Run `tests/real_timeFR.py` to test the attack in the real world.
   
 
 ## 4. Acknowledgment
