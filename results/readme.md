@@ -1,6 +1,6 @@
-The results from different tests will be saved here as csv files.
-It contains:
-1. the celebrities recognition results named celeb_results.csv.
-2. the simulated dodging and DoS results named dodgingDoS.csv
-3. the simulated impersonation results named impersonation_results.csv
-4. the statictics results about the filters named filters.csv
+The results from different tests will be saved here as CSV files. The folder contains:
+
+1. `celeb_results.csv` - the celebrity recognition results.
+2. `dodgingDoS.csv` - the simulated dodging and DoS results.
+3. `impersonation_results.csv` - the simulated impersonation results.
+4. `filters.csv` - the statistics results about the filters.
