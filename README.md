@@ -49,6 +49,7 @@ This guides the real-world attack to achieve a high success rate within a reason
       1. **Black-box Test**: Implemented in `celebritie_recognition.py`.
       2. **Continual Attack**: Implemented in `continual_attack.py`.
       3. **DoS and Dodging**: Implemented in `dodgings.py`.
+      4. **Physically Real-time Test**: Implemented in `real_timeFR.py`.
 
 
 ### 2.2 Getting Started
