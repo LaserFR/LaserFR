@@ -37,7 +37,7 @@ class DodgingDoS:
         img_embedding = self.resnet(img_cropped.unsqueeze(0).to(self.device)).detach().cpu()
         return img_embedding
 
-    def analyze_attackers(self, threshold=1.424):
+    def analyze_attackers(self, threshold=1.242):
         # Analyzes the original and synthetic attacker images to detect dodging and DoS attempts.
         results = []
         # Iterates through each attacker in the `original_data_dir`.
@@ -98,5 +98,5 @@ if __name__ == '__main__':
     original_data_dir = '../data/attackers'  # Directory for original attacker images
     synthetic_data_dir = '../data/synthetic_attackers'  # Directory for synthetic attacker images
     analyzer = DodgingDoS(original_data_dir, synthetic_data_dir)
-    results = analyzer.analyze_attackers(threshold=1.424)
+    results = analyzer.analyze_attackers(threshold=1.242)
     analyzer.save_results(results, '../results/dodgingDoS.csv')
