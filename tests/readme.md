@@ -115,7 +115,7 @@ This class uses the MTCNN and InceptionResnetV1 models from the `facenet-pytorch
   - Ensure your images are in a format supported by PIL (JPEG, PNG, etc.).
 
 - **Threshold Value**:
-  - The threshold value for detecting dodging attempts is set to 1.424 by default, which is from the [FaceNet paper](https://arxiv.org/abs/1503.03832) (tested with LFW). Adjust this value as needed based on your requirements.
+  - The threshold value for detecting dodging attempts is set to 1.242 by default, which is from the [FaceNet paper](https://arxiv.org/abs/1503.03832) (tested with LFW). Adjust this value as needed based on your requirements.
 
 
 # 4. Real-Time Face Recognition with DeepFace
