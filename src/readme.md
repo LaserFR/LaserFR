@@ -1,6 +1,6 @@
 # Laser Generator
 
-This script simulates a laser attack on a CMOS sensor by generating an interference pattern and converting the resulting power distribution into RGB values based on the quantum efficiency of the sensor.
+This script simulates a laser attack on a CMOS sensor by generating an interference pattern and converting the resulting power distribution into RGB values based on the sensor's quantum efficiency.
 
 ## Important Notes
 
@@ -36,7 +36,10 @@ This script conducts the ES filter and PSAS filter.
 
 ## Example Usage
 
+If the `move` option of ES filter is True, a folder named `es_selected_images` will be created to save the filtered images. 
+Similarly, if the `move` option of PSAS filter is True, a folder named `psas_selected_images` will be created to save the filtered images. 
 
+By default, the option for the ES filter is set to False, while the PSAS filter is set to True. This is because we will use the images in the `psas_selected_images` folder to run simulated attacks.
 
 ## Important Notes
 
