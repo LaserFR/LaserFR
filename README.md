@@ -142,7 +142,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 ### 3.4 Attack simulation
 
-1. Run `src/face_recognition.py` to test the face recognition results with the synthetic attackers and the targets in the `selected_data` folder from [3.1 Filters](#22-getting-started).
+1. Run `src/face_recognition.py` to test the face recognition results with the synthetic attackers and the targets in the `selected_data` folder from [3.1 Filters](#22-getting-started). (Sections 6.3 and 6.4)
    
 2. The results will be saved in the `results/impersonation_results.csv` file.
 
@@ -150,13 +150,13 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    
 ### 3.5 Other Tests
 
-1. Run `tests/celebritie_recognition.py` to test the black-box attack against Amazon Recognition.
+1. Run `tests/celebritie_recognition.py` to test the black-box attack against Amazon Recognition. (Section 6.6)
    
    To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). The results will be saved in `results/celeb_results.csv`.
 
-2. Run `tests/continual_attack.py` to test the continual attack.
+2. Run `tests/continual_attack.py` to test the continual attack. (Section 7.1)
 
-3. Run `tests/dodging.py` to test the dodging/DoS attack.
+3. Run `tests/dodging.py` to test the dodging/DoS attack. (Section 6.2)
    
 4. Run `tests/real_timeFR.py` to test the attack in the real world.
   
@@ -165,7 +165,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 ### 4.1 Attacker images on request
 
-Due to IRB requirements, we cannot publicly share attacker images. If you need access, please contact us by email.
+Due to IRB requirements, we cannot publicly share attacker images. If you need access, please feel free to contact us by email.
 
 ### 4.2 Citation
 
