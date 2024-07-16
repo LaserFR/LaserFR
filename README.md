@@ -28,7 +28,7 @@ This guides the real-world attack to achieve a high success rate within a reason
      And the laser images and the real-world captured images.
    
    - **models/**  
-     Stores the model parameters used in the project.
+     Stores the FR models and corresponding parameters used in the project.
    
    - **selected_data/**  
      Includes images that the filters have filtered out.
@@ -57,10 +57,7 @@ Each directory contains a detailed README file that explains its usage. Addition
 
 #### Prerequisites
 
-- We tested our attack using [FaceNet](https://github.com/davidsandberg/facenet), [facenet-pytorch](https://github.com/timesler/facenet-pytorch), and [deepface](https://github.com/serengil/deepface).
-  Please install these libraries first by running the following command:
-  ```bash
-   pip install facenet facenet-pytorch deepface
+We run our test under Windows 10. The code can run with just the CPU. If you have a GPU, the code may be accelerated.
 
 #### Installation
 
@@ -75,6 +72,8 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 3. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
+
+ As we tested our attack using [FaceNet](https://github.com/davidsandberg/facenet), [facenet-pytorch](https://github.com/timesler/facenet-pytorch), and [deepface](https://github.com/serengil/deepface). Please ensure these libraries have the same version listed in requirements.txt, as we noticed that the deepface just released a significant version update.
 
 
 ## 3. Usage
