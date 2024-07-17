@@ -1,18 +1,10 @@
-The parameters used for ResNet152 can be downloaded from the [link](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2), please place the 'parameters.pth' file in this folder and keep the name unchanged.
+-The folder is to save the models and parameters used in our test.
 
-Other resnet models: 
+-The modified models for the psas filter are named model_{Model name}.py
 
-| Model       | URL                                                             |
-|-------------|-----------------------------------------------------------------|
-| resnet18    | [resnet18-5c106cde.pth](https://download.pytorch.org/models/resnet18-5c106cde.pth)    |
-| resnet34    | [resnet34-333f7ec4.pth](https://download.pytorch.org/models/resnet34-333f7ec4.pth)    |
-| resnet50    | [resnet50-19c8e357.pth](https://download.pytorch.org/models/resnet50-19c8e357.pth)    |
-| resnet101   | [resnet101-5d3b4d8f.pth](https://download.pytorch.org/models/resnet101-5d3b4d8f.pth)   |
-| resnet152   | [resnet152-b121ed2d.pth](https://download.pytorch.org/models/resnet152-b121ed2d.pth)   |
+-The pre-trained parameters for the modified models are named the same as the models.
 
-For instance, the ArcFace tested is based on resnet34.
+-The pre-trained model for FaceNet is [20180402-114759.pb](), which should be saved here.
 
+-The retrained classifier in the continual attack is saved here named `classifier.pkl`.
 
-The parameters used for FaceNet can be downloaded from the [link](https://huggingface.co/lllyasviel/Annotators/blob/main/facenet.pth), please place the 'facenet.pth' file in this folder and keep the name unchanged.
-
-The FaceNet pre-trained model can be downloaded from the [link](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-), please unzip the downloaded file and place the '20180402-114759.pb' file in this folder and keep the name unchanged.
