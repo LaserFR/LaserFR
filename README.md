@@ -2,10 +2,11 @@
 
 ## 1. Introduction
 
-This is the official implementation code for the paper "The Invisible Polyjuice Potion: An Effective Physical Adversarial Attack Against Face Recognition." 
-We aim to perform adversarial attacks on face recognition systems using an infrared diode embedded in the middle of glasses. 
-First, we select the most likely pairs through filters and then use attack simulation to find the precise pairs and laser current. 
-This guides the real-world attack to achieve a high success rate within a reasonable time.
+This is the official implementation code for the paper "The Invisible Polyjuice Potion: An Effective Physical Adversarial Attack Against Face Recognition."
+
+Our work involves modeling physical infrared lasers and using simulation results to guide physical attacks. The structure of our project mirrors that of the paper, where a Python script corresponds to a section. This approach facilitates step-by-step verification of our methodology and results.
+
+Additionally, we provide a main Python file (main.py) that integrates all sections into a cohesive framework. This file allows the complete execution of a desired attack scenario against the FR models under study.
 
 ## 2. Table of Contents
 
@@ -78,80 +79,46 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 ## 3. Usage
 
-### 3.1 Filters
 
-1. Data Preparation
-   
-   - Prepare both the attackers' and targets' original image datasets.
-   
-   - There are two subfolders within the data folder:
-      - **theOne/**: Contains images of a specific attacker or target.
-      - **theMany/**: Contains images that need to be filtered.
+### 3.1 Gnenerate laser images
 
-2. Run
+Based on the parameters of the targeted camera and the infrared laser used, generate laser images under different laser powers.
 
-   - For untargeted impersonation, place one attacker in the `theOne` folder, and the targets in the `theMany` folder. Run `scr/filters.py`. The filtered targets will be copied to the `selected_data` folder.
-   
-   - For targeted impersonation, place the targeted person in the `theOne` folder, and the attackers in the `theMany` folder. Run `scr/filters.py`. The potential attackers will be copied to the `selected_data` folder.
-   
-   - Multiple analyses at one time are supported. The corresponding results will be placed in subfolders named after the attackers/targets from the `theOne` folder.
+   - Implementation of Section 5.1 and achieved in `laser_generation.py`.
+     
+   - The generated laser images will be saved in the `data/laser_images/`.
 
-### 3.2 Laser signal generation
+### 3.2 Image merge
 
-1. Input the parameters for the laser and camera in the `laser_generation.py`.
+Merge the attackers and the laser images to generate synthetic attack images.
 
-   
-      | Parameter        | Description                                   | Example Value         |
-      |------------------|-----------------------------------------------|-----------------------|
-      | **LaserModel**   |                                               |                       |
-      | `P`              | Power of the laser in mW                      | 100.0                 |
-      | `wavelength`     | Wavelength of the laser light in meters       | 0.000000785 (785 nm)  |
-      | `theta`          | Divergence angle in radians                   | 0.028                 |
-      | `n`              | Refractive index                              | 1.5                   |
-      | `d`              | Distance from aperture to the lens in meters  | 0.004                 |
-      | `f`              | Focal length in meters                        | 0.013                 |
-      | `z`              | Distance from the beam waist in meters        | 0.35                  |
-      | `t`              | Lens thickness in meters                      | 0.003                 |
-      | `r_a`            | Aperture radius in meters                     | 0.0072                |
-      | **CMOSSensor**   |                                               |                       |
-      | `width`          | Width of the CMOS sensor in meters            | 0.004                 |
-      | `height`         | Height of the CMOS sensor in meters           | 0.003                 |
-      | `pixel_size`     | Size of a single pixel in meters              | 1e-6 (1.0 µm)         |
-      | `QE_r`           | Quantum Efficiency for the red channel        | 0.33                  |
-      | `QE_g`           | Quantum Efficiency for the green channel      | 0.2                   |
-      | `QE_b`           | Quantum Efficiency for the blue channel       | 0.08                  |
-      | `exposure_time`  | Exposure time in seconds                      | 1.0/30                |
+   - Implementation of Section 5.2 and achieved in `image_merge.py`.
 
-   
-2. Run the `laser_generation.py` with the current value range and intervals.
-   
-3. The generated laser image named with current values will be saved in the `data/laser_images` folder.
-   
+   - The synthetic attack images will be saved in `data/synthetic_attackers/`
 
-### 3.3 Image merge
+### 3.3 Filters
 
-1. After identifying the attacker, merge the attackers and the laser images to generate synthetic attack images.
-   
-   Currently, we need to align the laser image with the attackers manually.
-   We need to measure the coordinates of the glasses' center and align the laser's center with these coordinates.
-   We hope to further develop an automatic merging process in the future.
-   
-3. The synthetic attackers named with the attackers' names and the current values will be saved in the `data/synthetic_attackers` folder.
+Verify if an untargeted attack can succeed without running a synthetic attack, and select the predictable target for predictable untargeted impersonation and the optimal attacker for a targeted impersonation attack with reduced computation workload.
+
+   - Implementation of enhanced research of Section 5.3.4 and achieved in `filters.py`.
+
+   - If choose to move the images, the filtered-out images will be copied to `selected_data`. And the results will be saved as `selected_pairs.csv` in the `results` folder.
 
 
 ### 3.4 Attack simulation
 
-1. Run `src/face_recognition.py` to test the face recognition results with the synthetic attackers and the targets in the `selected_data` folder from [3.1 Filters](#22-getting-started). (Sections 6.3 and 6.4)
-   
-2. The results will be saved in the `results/impersonation_results.csv` file.
+Verify if an untargeted attack can succeed without running a synthetic attack, and select the predictable target for predictable untargeted impersonation and the optimal attacker for a targeted impersonation attack with reduced computation workload.
 
-   The results contain 4 columns, 'identity' is the targets identified, 'attacker' is the attacker's name, and 'laser setting' is the informed laser current range.
+   - Implementation of attack simulation of Section 5.3, and test for Section 6.3, Section 6.4, and Section 7.2. And achieved in `face_recognition.py`.
+     
+   - The results will be saved in the `results/impersonation_results.csv` file.
+
    
 ### 3.5 Other Tests
 
 1. Run `tests/celebritie_recognition.py` to test the black-box attack against Amazon Recognition. (Section 6.6)
    
-   To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). The results will be saved in `results/celeb_results.csv`.
+   To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). 
 
 2. Run `tests/continual_attack.py` to test the continual attack. (Section 7.1)
 
@@ -167,6 +134,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 Due to IRB requirements, we cannot publicly share attacker images. If you need access, please feel free to contact us by email.
 
 ### 4.2 Citation
+
 
 
 
