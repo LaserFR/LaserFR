@@ -80,13 +80,13 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 ## 3. Usage
 
 
-### 3.1 Gnenerate laser images
+### 3.1 Genenerate laser images
 
 Based on the parameters of the targeted camera and the infrared laser used, generate laser images under different laser powers.
 
    - Implementation of Section 5.1 and achieved in `laser_generation.py`.
      
-   - The generated laser images will be saved in the `data/laser_images/`.
+   - Run `laser_generation.py`, the generated laser images will be saved in the `data/laser_images/`. You can check them here and the images are named ending with power value。 
 
 ### 3.2 Image merge
 
@@ -94,7 +94,7 @@ Merge the attackers and the laser images to generate synthetic attack images.
 
    - Implementation of Section 5.2 and achieved in `image_merge.py`.
 
-   - The synthetic attack images will be saved in `data/synthetic_attackers/`
+   - Run `image_merge.py`, the attackers in the `data/attackers` will be merged with the laser images from the previous approach. The synthetic attack images will be saved in `data/synthetic_attackers/`.
 
 ### 3.3 Filters
 
