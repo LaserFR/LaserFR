@@ -4,9 +4,9 @@
 
 This is the official implementation code for the paper "The Invisible Polyjuice Potion: An Effective Physical Adversarial Attack Against Face Recognition."
 
-Our work involves modeling physical infrared lasers and using simulation results to guide physical attacks. The structure of our project mirrors that of the paper, where a Python script corresponds to a section. This approach facilitates step-by-step verification of our methodology and results.
+Our work involves modeling physical infrared lasers and using simulation results to guide physical attacks. The structure of our project mirrors that of the paper, where a Python script corresponds to a step. This approach facilitates step-by-step verification of our methodology and results, and reuse and repurposing by others.
 
-Additionally, we provide a main Python file (main.py) that integrates all sections into a cohesive framework. This file allows the complete execution of a desired attack scenario against the FR models under study.
+Additionally, we provide a main Python file (main.py) that integrates all approaches into an integrated execution. This file allows the complete execution of a desired attack scenario against the FR models under study.
 
 ## 2. Table of Contents
 
