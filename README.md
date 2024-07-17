@@ -79,6 +79,10 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 ## 3. Usage
 
+### 3.1 Prepare for the targeted dataset
+
+Run `LFWPicker.py`, it will download the [lwf_funneled dataset](http://vis-www.cs.umass.edu/lfw/lfw-funneled.tgz), and generate the I-K dataset, which randomly picks K identities from the LFW dataset. the original LFW dataset and the I-K dataset will be saved in the `data/` folder. If the download link does not work, you can manually download the dataset and set the parameter of LFWPicker `dataset_path='path to existing lfw'`.
+
 
 ### 3.1 Genenerate laser images
 
