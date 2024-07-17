@@ -5,6 +5,8 @@
 This is the official implementation code for the paper "The Invisible Polyjuice Potion: An Effective Physical Adversarial Attack Against Face Recognition."
 
 Our work involves modeling physical infrared lasers and using simulation results to guide physical attacks. The structure of our project mirrors that of the paper, where a Python script corresponds to a step. This approach facilitates step-by-step verification of our methodology and results, and reuse and repurposing by others.
+As shown in the figure:
+![workflow](https://github.com/LaserFR/LaserFR/blob/main/images/github%20overflow.png)
 
 Additionally, we provide a main Python file (main.py) that integrates all approaches into an integrated execution. This file allows the complete execution of a desired attack scenario against the FR models under study.
 
@@ -81,10 +83,18 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 ### 3.1 Prepare for the targeted dataset
 
-Run `LFWPicker.py`, it will download the [lwf_funneled dataset](http://vis-www.cs.umass.edu/lfw/lfw-funneled.tgz), and generate the I-K dataset, which randomly picks K identities from the LFW dataset. the original LFW dataset and the I-K dataset will be saved in the `data/` folder. If the download link does not work, you can manually download the dataset and set the parameter of LFWPicker `dataset_path='path to existing lfw'`.
+1. prepare the targeted face dataset
+   
+    Run `LFWPicker.py`, it will download the [lwf_funneled dataset](http://vis-www.cs.umass.edu/lfw/lfw-funneled.tgz), and generate the I-K dataset, which randomly picks K 
+    identities from the LFW dataset. the original LFW dataset and the I-K dataset will be saved in the `data/` folder. If the download link does not work, you can manually 
+    download the dataset and set the parameter of LFWPicker `dataset_path='path to existing lfw'`.
 
+2. prepare the attacker dataset
 
-### 3.1 Genenerate laser images
+   We need to take the attackers' original photo wearing the customized glasses, the laser is turned off. And then put the images in the `data/attackers`.
+
+   
+### 3.2 Genenerate laser images
 
 Based on the parameters of the targeted camera and the infrared laser used, generate laser images under different laser powers.
 
@@ -106,7 +116,7 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
    - Implementation of enhanced research of Section 5.3.4 and achieved in `filters.py`.
 
-   - If choose to move the images, the filtered-out images will be copied to `selected_data`. And the results will be saved as `selected_pairs.csv` in the `results` folder.
+   - The results will be saved as `selected_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
 
 
 ### 3.4 Attack simulation
@@ -115,7 +125,7 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
    - Implementation of attack simulation of Section 5.3, and test for Section 6.3, Section 6.4, and Section 7.2. And achieved in `face_recognition.py`.
      
-   - The results will be saved in the `results/impersonation_results.csv` file.
+   - The results will be saved in the `results/***_impersonation_results.csv` file.
 
    
 ### 3.5 Other Tests
