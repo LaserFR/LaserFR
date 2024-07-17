@@ -53,6 +53,9 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
       2. **Continual Attack**: Implemented in `continual_attack.py`.
       3. **DoS and Dodging**: Implemented in `dodgings.py`.
       4. **Physically Real-time Test**: Implemented in `real_timeFR.py`.
+
+   - **images/**
+     Includes the images and videos to show real-world approaches and results.
          
 Each directory contains a detailed README file that explains its usage. Additionally, each code file includes comments describing the code's functions and operations.
 
