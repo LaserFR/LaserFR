@@ -74,6 +74,9 @@ The ExplanationGenerator class relies on pre-trained models (e.g., ResNet152 or 
 ## 4. Face Recognition Attack Analysis
 
 This project involves analyzing face recognition results to inform impersonation attacks using the DeepFace library. The script iterates over images of synthetic attackers and compares them with images of targets to find matches.
+When running the Python script for the first time, it will cost plenty of time. As we claimed, it time-cost task to do the embedding calculation. So the deepface platform will save the embeddings for each iamge for quick use in the following test. If the dataset is changed, it will need to recalculate and save the embeddings.
+
+deepface, functions.py enforce-detection=False
 
 
 
