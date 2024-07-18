@@ -55,7 +55,8 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
       4. **Physically Real-time Test**: Implemented in `real_timeFR.py`.
 
    - **images/**
-     Includes the images and videos to show real-world approaches and results.
+     
+     It includes images and videos that show real-world approaches and results.
          
 Each directory contains a detailed README file that explains its usage. Additionally, each code file includes comments describing the code's functions and operations.
 
@@ -84,7 +85,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 ## 3. Usage
 
-### 3.1 Prepare for the targeted dataset
+### 3.1 Prepare for the face dataset
 
 1. prepare the targeted face dataset
    
@@ -99,7 +100,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    
 ### 3.2 Genenerate laser images
 
-Based on the parameters of the targeted camera and the infrared laser used, generate laser images under different laser powers.
+Based on the parameters of the targeted camera and the infrared laser used, laser images can be generated under different laser powers.
 
    - Implementation of Section 5.1 and achieved in `laser_generation.py`.
      
@@ -119,7 +120,8 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
    - Implementation of enhanced research of Section 5.3.4 and achieved in `filters.py`.
 
-   - The results will be saved as `selected_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
+   - Run `filters.py`. For targeted impersonation, if the target is only one, the selected attackers for the target will be printed in the terminal. The results will be saved as `targeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
+   - For untargeted impersonation, attackers who can achieve the untargeted attack will be printed in the terminal, and The results will be saved as `untargeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
 
 
 ### 3.4 Attack simulation
@@ -150,7 +152,15 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
 Due to IRB requirements, we cannot publicly share attacker images. If you need access, please feel free to contact us by email.
 
-### 4.2 Citation
+### 4.2 References
+
+https://github.com/Jeff-Zilence/Explain_Metric_Learning
+
+https://github.com/davidsandberg/facenet
+
+https://github.com/timesler/facenet-pytorch
+
+https://github.com/serengil/deepface
 
 
 
