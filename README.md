@@ -58,7 +58,7 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
      
      It includes images and videos that show real-world approaches and results.
          
-Each directory contains a detailed README file that explains its usage. Additionally, each code file includes comments describing the code's functions and operations.
+   Each directory contains a detailed README file that explains its usage. Additionally, each code file includes comments describing the code's functions and operations.
 
 ### 2.2 Getting Started
 
@@ -72,10 +72,10 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/project-title.git
+   git clone https://github.com/LaserFR/LaserFR.git
 2. Navigate to the project directory:
    ```bash
-   cd project-title
+   cd ./LaserFR
 3. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
