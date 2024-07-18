@@ -95,7 +95,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 2. prepare the attacker dataset
 
-   We need to take the attackers' original photo wearing the customized glasses, the laser is turned off. And then put the images in the `data/attackers`.
+   We need to take the attackers' original photo wearing the customized glasses, the laser is turned off. And then put the images in the `data/attackers`. The attackers' images should be placed under the folder named after the attacker.
 
    
 ### 3.2 Genenerate laser images
