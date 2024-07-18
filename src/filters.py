@@ -1,13 +1,20 @@
 import cv2
 import numpy as np
 import torch
-from torch.autograd import Variable
-from Models import resnet152
+
+from Models.model_FaceNet import inception_resnet_v1
+from Models.model_ArcFace import resnet152
+from Models.model_VGGface import resnet50
+from Models.model_SFace import Inception_v3
+from Models.model_DeepFace import deepID
+
 from deepface.commons import distance
 import shutil
 import os
 from torch.utils.data import Dataset, DataLoader
 from mtcnn import MTCNN
+import pandas as pd
+from retinaface import RetinaFace
 
 
 class ImageDataset(Dataset):
@@ -42,17 +49,32 @@ class ImageDataset(Dataset):
         return image, image_show
 
 
+def select_model(model_name):
+    model_mapping = {
+        'FaceNet': inception_resnet_v1,
+        'ArcFace': resnet152,
+        'SFace': Inception_v3,
+        'VGGFace': resnet50,
+        'DeepFace': deepID
+    }
+
+    if model_name in model_mapping:
+        return model_mapping[model_name]()
+    else:
+        raise ValueError(f"Model name '{model_name}' is not recognized.")
+
+
 class ExplanationGenerator:
 
-    def __init__(self):
+    def __init__(self, model_name):
         self.Decomposition = None
         self.mtcnn = MTCNN()
-        self.model = resnet152()
-        resume = 'Models/parameters.pth'
-        resume = os.path.join('..', resume)
-        print('load model from {}'.format(resume))
-        weight = torch.load(resume, map_location=torch.device('cpu'))
-        self.model.load_state_dict(weight)
+        self.model = select_model(model_name)
+        # resume = 'Models/20180402-114759-vggface2.pt'
+        # resume = os.path.join('..', resume)
+        # print('load model from {}'.format(resume))
+        # weight = torch.load(resume, map_location=torch.device('cpu'))
+        # self.model.load_state_dict(weight)
         self.model = self.model.eval()
         if torch.cuda.is_available():
             self.model = self.model.cuda()
@@ -64,8 +86,8 @@ class ExplanationGenerator:
         folder_2_path = os.path.join('..', folder_2)  # Adjust path relative to src
         dataset_1 = ImageDataset(folder_1_path)
         dataset_2 = ImageDataset(folder_2_path)
-        print(f"Attacker Dataset length: {len(dataset_1)}")  # Debug: Print length of dataset 1
-        print(f"Target Dataset length: {len(dataset_2)}")  # Deb
+        print(f"Specific Dataset length: {len(dataset_1)}")  # Debug: Print length of dataset 1
+        print(f"Search Dataset length: {len(dataset_2)}")  # Deb
         loader_1 = DataLoader(dataset_1, batch_size=1, shuffle=False)
         loader_2 = DataLoader(dataset_2, batch_size=1, shuffle=False)
 
@@ -78,18 +100,18 @@ class ExplanationGenerator:
         with torch.no_grad():
             if torch.cuda.is_available():
                 inputs = inputs.cuda()
-                embed, map_ = self.model(inputs, True)
+                embed, map_, fc, bn = self.model(inputs, True)
             else:
-                embed, map_ = self.model(inputs, True)
-            fc = self.model.fc.cpu()
-            bn = self.model.bn3.cpu()
+                embed, map_, fc, bn = self.model(inputs, True)
+            fc = fc.cpu()
+            bn = bn.cpu()
 
         return embed, map_, fc, bn
 
     def Overall_map(self, map_1, map_2, fc_1=None, fc_2=None, bn_1=None, bn_2=None, size=(112, 112), mode='Flatten'):
         '''
-            From Paper: Only for Flatten architecture, you may check the code of other applications
-            for the implementation of GAP and GMP.
+            From Paper: Only for Flatten architecture, calculate overall similarity
+            from: https://github.com/Jeff-Zilence/Explain_Metric_Learning
         '''
         global Decomposition
         if mode == 'Flatten':
@@ -150,12 +172,26 @@ class ExplanationGenerator:
             Decomposition = np.maximum(Decomposition, 0)
         return Decomposition
 
-    def get_landmarks(self, image_path):
+    def get_landmarks(self, image_path, method='mtcnn'):
+        '''
+            landmarks provided by mtcnn contain two eyes, nose, and
+        '''
         image = cv2.imread(image_path)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        result = self.mtcnn.detect_faces(image_rgb)
-        landmarks = result[0]['keypoints']
-        return landmarks
+        if method == 'mtcnn':
+            result = self.mtcnn.detect_faces(image_rgb)
+            if result and 'keypoints' in result[0]:
+                landmarks = result[0]['keypoints']
+                return landmarks
+
+        elif method == 'retinaface':
+            result = RetinaFace.detect_faces(image_path)
+            if 'face_1' in result:
+                landmarks = result['face_1']['landmarks']
+                return landmarks
+
+        print(f'No landmarks found for image: {image_path}')
+        return None
 
     def calculate_a(self, landmarks):
         '''
@@ -163,7 +199,7 @@ class ExplanationGenerator:
         '''
         if landmarks is not None and len(landmarks) > 0:
             nose_y = landmarks['nose'][1]
-            mouth_y = (landmarks['left_eye'][1] + landmarks['right_eye'][1]) / 2
+            mouth_y = (landmarks['mouth_left'][1] + landmarks['mouth_right'][1]) / 2
             a = int((nose_y + mouth_y) / 2)
         else:
             a = 80  # default value
@@ -178,8 +214,9 @@ class ExplanationGenerator:
         k = 0.25
         loader_1, loader_2 = self.get_input_from_path(folder_1, folder_2, size=size)
 
-        all_pairs = []
+        selected_pairs_dict = {}
         for batch_1 in loader_1:
+            all_pairs = []
             for batch_2 in loader_2:
                 inputs_1, image_1, path_1 = batch_1
                 inputs_2, image_2, path_2 = batch_2
@@ -207,13 +244,14 @@ class ExplanationGenerator:
 
             top_k_percent_index = int(len(all_pairs) * k)
             selected_pairs = all_pairs[:top_k_percent_index]
-            print(f'{k*100}% targets have been filtered out.')
+            base_name = os.path.splitext(os.path.basename(batch_1[2][0]))[0]
+            ## print(f'{k*100}% targets for {base_name} have been filtered out.')
 
             if move:
                 current_dir = os.path.dirname(os.path.abspath(__file__))
                 parent_dir = os.path.dirname(current_dir)
                 data_dir = os.path.join(parent_dir, 'selected_data')
-                new_folder = os.path.join(data_dir,'./es_selected_images')
+                new_folder = os.path.join(data_dir, './es_selected_images')
                 os.makedirs(new_folder, exist_ok=True)
                 for _, path_1, path_2, _, _, _, _, _, _, _, _ in selected_pairs:
                     folder_1 = os.path.dirname(path_1)
@@ -230,16 +268,30 @@ class ExplanationGenerator:
                     # Copy the image from path_2 to new_folder_2
                     new_image_path = os.path.join(new_folder_2, os.path.basename(path_2))
                     shutil.copy2(path_2, new_image_path)
-            print(f'selected images have been copied to {new_folder_1}.')
+                    ## print(f'selected images have been copied to {new_folder_1}.')
 
-        return selected_pairs
+            for dist, path_1, path_2, embed_1, map_1, bn_1, fc_1, embed_2, map_2, bn_2, fc_2 in selected_pairs:
+                selected_pairs_dict[path_1] = (dist, path_2, embed_1, map_1, bn_1, fc_1, embed_2, map_2, bn_2, fc_2)
 
-    def psas_filter(self, selected_pairs=None, move=False, size = (112, 112)):
+        return selected_pairs_dict
+
+    def psas_filter(self, selected_pairs_dict=None, move=True, size=(112, 112), mode='targeted'):
+        '''
+            Calculate the overall similarity between each pair of images from the ES filter.
+            The calculation is directional; it computes the similarity from image1 to image2,
+            as the laser is always applied to the attacker. Therefore, image1 is always the attacker image.
+        '''
 
         selected_names = []
-        names = []
-        for pair in selected_pairs:
-            dist, path_1, path_2, embed_1, map_1, bn_1, fc_1, embed_2, map_2, bn_2, fc_2 = pair
+
+        for path_1, (dist, path_2, _, map_1, bn_1, fc_1, _, map_2, bn_2, fc_2) in selected_pairs_dict.items():
+            original_path_1, original_path_2 = path_1, path_2  # Keep the original paths for move operation
+
+            if mode == 'targeted':
+                path_1, path_2 = path_2, path_1
+                map_1, map_2 = map_2, map_1
+                bn_1, bn_2 = bn_2, bn_1
+                fc_1, fc_2 = fc_2, fc_1
 
             landmarks = self.get_landmarks(path_1)
             a = self.calculate_a(landmarks)
@@ -258,56 +310,109 @@ class ExplanationGenerator:
 
             # Check if mean_upper < mean_lower
             if mean_upper < mean_lower:
-                selected_names.append((path_1, path_2))
-            if move:
-                current_dir = os.path.dirname(os.path.abspath(__file__))
-                parent_dir = os.path.dirname(current_dir)
-                data_dir = os.path.join(parent_dir, 'selected_data')
-                new_folder = os.path.join(data_dir, 'psas_selected_images')
+                selected_names.append((original_path_1, original_path_2, dist, mean_upper, mean_lower))
 
-                os.makedirs(new_folder, exist_ok=True)
-                for path_1, path_2 in selected_names:
-                    folder_1 = os.path.dirname(path_1)
-                    folder_2 = os.path.dirname(path_2)
+        if move:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            parent_dir = os.path.dirname(current_dir)
+            data_dir = os.path.join(parent_dir, 'selected_data')
+            new_folder = os.path.join(data_dir, 'psas_selected_images')
 
-                    # Extracting the base name of the file in path_2
-                    base_name = os.path.splitext(os.path.basename(path_2))[0]
+            os.makedirs(new_folder, exist_ok=True)
+            for path_11, path_22, _, _, _ in selected_names:
+                folder_1 = os.path.dirname(path_11)
+                folder_2 = os.path.dirname(path_22)
 
-                    new_folder_1 = os.path.join(new_folder, os.path.basename(folder_1))
-                    new_folder_2 = os.path.join(new_folder_1, os.path.basename(folder_2))
-                    os.makedirs(new_folder_1, exist_ok=True)
-                    os.makedirs(new_folder_2, exist_ok=True)
+                new_folder_1 = os.path.join(new_folder, os.path.basename(folder_1))
+                new_folder_2 = os.path.join(new_folder_1, os.path.basename(folder_2))
+                os.makedirs(new_folder_1, exist_ok=True)
+                os.makedirs(new_folder_2, exist_ok=True)
 
-                    # Copy the image from path_2 to new_folder_2
-                    new_image_path = os.path.join(new_folder_2, os.path.basename(path_2))
-                    shutil.copy2(path_2, new_image_path)
+                # Copy the image from path_2 to new_folder_2
+                new_image_path = os.path.join(new_folder_2, os.path.basename(path_22))
+                shutil.copy2(path_22, new_image_path)
+                base_name = os.path.splitext(os.path.basename(path_11))[0]
+                print(f'PSAS targets for {base_name} have been moved.')
 
-            # Clear CUDA cache to free up memory
+        # Clear CUDA cache to free up memory
 
-            del embed_1, embed_2, decomposition
-            torch.cuda.empty_cache()
+        del decomposition
+        torch.cuda.empty_cache()
+
         associated_names = {}
-        for path_1, path_2 in selected_names:
+        for path_1, path_2, dist, mean_upper, mean_lower in selected_names:
             name_1 = os.path.basename(path_1)
             name_2 = os.path.basename(path_2)
 
             if name_1 not in associated_names:
-                associated_names[name_1] = set()
-            associated_names[name_1].add(name_2)
+                associated_names[name_1] = []
+            associated_names[name_1].append((name_2, dist, mean_upper, mean_lower))
 
-        print(f'Total unique names: {len(associated_names)}')
-        for name_1, name_2_set in associated_names.items():
-            print(f'{name_1}: {len(name_2_set)} names -> {name_2_set}')
+        # print(f'Total unique names: {len(associated_names)}')
+        # for name_1, name_2_set in associated_names.items():
+        #     print(f'{name_1}: {len(name_2_set)} names -> {name_2_set}')
 
         return associated_names
 
 
 if __name__ == '__main__':
-    theOne = 'data/theOne'
-    theMany = 'data/theMany'
+    # run targeted impersonation filters
+    print('running filters for specific target for targeted attack')
+    theOne = 'data/I-50'
+    theMany = 'data/attackers'
 
-    eg = ExplanationGenerator()
-    selected_pairs = eg.es_filter(theOne, theMany, move=True)
-    selected_names = eg.psas_filter(selected_pairs, move=True)
+    eg = ExplanationGenerator('ArcFace')
+
+    selected_pairs = eg.es_filter(theOne, theMany, move=False)
+    selected_names = eg.psas_filter(selected_pairs, move=True, mode='targeted')
+
+    data = []
+    for name_1, associations in selected_names.items():
+        base_name_1 = name_1.rsplit('.', 1)[0]
+        for name_2, dist, mean_upper, mean_lower in associations:
+            base_name_2 = name_2.rsplit('.', 1)[0]
+            data.append((base_name_1, base_name_2, f"{dist:.3f}", f"{mean_upper:.3f}", f"{mean_lower:.3f}"))
+    # Create the DataFrame
+    df = pd.DataFrame(data, columns=['Target', 'Attacker', 'Distance', 'Mean_Upper', 'Mean_Lower'])
+
+    if len(df) < 3:
+        grouped = df.groupby('Target')['Attacker'].apply(list).reset_index()
+        for _, row in grouped.iterrows():
+            attackers = ', '.join(row['Attacker'])
+            print(f'The selected attackers for {row["Target"]} are {attackers}')
+
+    path = '../results/targeted_pairs.csv'  # Replace with the actual path where you save the result
+    df.to_csv(path, index=False)
+    print(f'The result is saved in the {path}')
+
+    print('Attackers for the target have been selected.')
+
+    # run untargeted impersonation filters
+    print('running filters for attackers for untargeted attack')
+    theOne1 = 'data/attackers'
+    theMany1 = 'data/I-50'
+
+    selected_pairs1 = eg.es_filter(theOne1, theMany1, move=False)
+    selected_names1 = eg.psas_filter(selected_pairs1, move=False, mode='untargeted')
+
+    data1 = []
+    for name_1, associations in selected_names1.items():
+        base_name_1 = name_1.rsplit('.', 1)[0]
+        for name_2, dist, mean_upper, mean_lower in associations:
+            base_name_2 = name_2.rsplit('.', 1)[0]
+            data1.append((base_name_1, base_name_2, f"{dist:.3f}", f"{mean_upper:.3f}", f"{mean_lower:.3f}"))
+    # Create the DataFrame
+    df1 = pd.DataFrame(data, columns=['Attacker', 'Target', 'Distance', 'Mean_Upper', 'Mean_Lower'])
+    printed_attackers = set()
+    for _, row in df.iterrows():
+        attacker = row["Attacker"]
+        if attacker not in printed_attackers:
+            print(f'Attacker {attacker} can achieve untargeted impersonation by filters.')
+            printed_attackers.add(attacker)
+
+    path1 = '../results/untargeted_pairs.csv'
+    df1.to_csv(path1, index=False)
+    print(f'Detailed results are saved in {path1} for further predictable untargeted impersonation attack.')
+
 
 

@@ -13,6 +13,7 @@ class LaserFaceMerger:
         return np.minimum(x, alpha)
 
     def merge_laser_face(self, face_image, laser_image, center_coords):
+        """Merge the laser image onto the face image at the specified center coordinates"""
         face_h, face_w = face_image.shape[:2]
         laser_h, laser_w = laser_image.shape[:2]
         center_x, center_y = center_coords
@@ -49,6 +50,7 @@ class LaserFaceMerger:
         return face_image
 
     def adjust_brightness(self, image, face_image):
+        """  Adjust the brightness of the image based on the power of the original face image"""
         P_o = np.mean(face_image)  # Power of the original face image
         P_a = self.laser_intensity  # Power of the laser intensity
 
@@ -59,6 +61,9 @@ class LaserFaceMerger:
         return adjusted_img
 
     def simulate_laser_attack(self, face_image_path, laser_images_path, center_coords, output_folder):
+        """generate synthetic attackers by merging the laser images from laser_images_path
+         and face images from face_image_path, the center coordinates need to be measured manually for each attacker."""
+
         # Load face image
         face_img = cv2.imread(face_image_path)
 
@@ -93,12 +98,20 @@ class LaserFaceMerger:
 
 
 # Example usage
-face_image_path = '../data/attackers'
-laser_images_path = '../data/laser_images'
-center_coords = (545, 973)  # Center coordinates (x, y) of face image
-output_folder = '../data/synthetic_attackers'
-for face_image_name in os.listdir(face_image_path):
-    full_face_image_path = os.path.join(face_image_path, face_image_name)
+if __name__ == '__main__':
 
-merger = LaserFaceMerger(alpha=255, laser_intensity=1.0)
-merger.simulate_laser_attack(full_face_image_path, laser_images_path, center_coords, output_folder)
+    face_image_path = '../data/attackers'
+    laser_images_path = '../data/laser_images'
+    center_coords = (545, 973)  # Center coordinates (x, y) of face image
+    output_folder = '../data/synthetic_attackers'
+
+    merger = LaserFaceMerger(alpha=255, laser_intensity=1.0)
+    for face_name in os.listdir(face_image_path):
+        face_folder_path = os.path.join(face_image_path, face_name)
+        if os.path.isdir(face_folder_path):
+            output_face_folder = os.path.join(output_folder, face_name)
+            os.makedirs(output_face_folder, exist_ok=True)
+
+            for face_image_name in os.listdir(face_folder_path):
+                full_face_image_path = os.path.join(face_folder_path, face_image_name)
+                merger.simulate_laser_attack(full_face_image_path, laser_images_path, center_coords, output_face_folder)

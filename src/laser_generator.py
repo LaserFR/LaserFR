@@ -72,7 +72,7 @@ class LaserModel:
         numerator = self.wavelength ** 2 + np.pi * z ** 2 * self.theta ** 4
         denominator = np.pi * self.theta ** 2
         exponent = -2 * np.pi ** 2 * r ** 2 * self.theta ** 2 / (
-                    self.wavelength ** 2 + np.pi ** 2 * z ** 2 * self.theta ** 2)
+                self.wavelength ** 2 + np.pi ** 2 * z ** 2 * self.theta ** 2)
         P_r = (numerator / denominator) * np.exp(exponent)
         return P_r
 
@@ -104,8 +104,8 @@ class LaserModel:
         """
         P_a = self.integrated_power(r_a, z)
         angle = np.arcsin(self.n * np.sin(np.arctan(self.d / self.f)))
-        x = np.linspace(-r_a, r_a, 8000)
-        y = np.linspace(-r_a, r_a, 8000)
+        x = np.linspace(-r_a, r_a, 1024)
+        y = np.linspace(-r_a, r_a, 1024)
         X, Y = np.meshgrid(x, y)
         R = np.sqrt(X ** 2 + Y ** 2)
         P_I = P_a * (np.cos(2 * np.pi * self.n * self.t * np.cos(angle) * R / self.wavelength)) ** 2
@@ -168,7 +168,7 @@ class CMOSSensor:
         np.ndarray: Integrated photon counts over the sensor's pixel grid.
         """
         resampled_laser_power_density = zoom(photon_counts, (
-        self.resolution_y / high_res_y, self.resolution_x / high_res_x))
+            self.resolution_y / high_res_y, self.resolution_x / high_res_x))
 
         # integrated_photons = np.zeros((self.resolution_y, self.resolution_x))
         # factor_x = high_res_x // self.resolution_x
@@ -235,57 +235,80 @@ class CMOSSensor:
 
 
 if __name__ == '__main__':
-    P = 200.0  # Example power in mW
-    wavelength = 0.000000785  # Example wavelength in meters (785 nm)
-    theta = 0.028  # Example divergence angle in radians
-    n = 1.5  # Example refractive index
-    d = 0.004  # Example distance from aperture to CMOS imaging plane center in meters
-    f = 0.013  # Example focal length in meters
-    z = 0.35  # Example distance from the beam waist in meters
-    t = 0.003  # Example lens thickness in meters
-    r_a = 0.0072  # Example aperture radius in meters
 
-    laser_model = LaserModel(P, wavelength, theta, n, d, f, t)
-    X, Y, P_I = laser_model.annular_interference_pattern(r_a, z)
+    def create_circle_mask(h, w, center=None, radius=None):
 
-    # Sensor parameters
-    sensor_width = 0.003024  # Sensor width in meters
-    sensor_height = 0.003024  # Sensor height in meters
-    pixel_size = 1e-6  # Pixel size in meters (1.0µm)
-    QE_r = 0.33  # Quantum Efficiency for red
-    QE_g = 0.14  # Quantum Efficiency for green
-    QE_b = 0.23  # Quantum Efficiency for blue
-    exposure_time = 1/30  # Example exposure time in seconds
-    scale_factor = P / 200
+        if center is None:  # use the middle of the image
+            center = (int(w / 2), int(h / 2))
+        if radius is None:  # use the smallest distance between the center and image walls
+            radius = min(center[0], center[1], w - center[0], h - center[1])
 
-    sensor = CMOSSensor(sensor_width, sensor_height, pixel_size, QE_r, QE_g, QE_b, exposure_time, scale_factor)
+        Y, X = np.ogrid[:h, :w]
+        dist_from_center = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2)
 
-    # Convert power to photon counts for each color channel
-    photons_r = sensor.power_to_photons(P_I, wavelength, QE_r)
-    photons_g = sensor.power_to_photons(P_I, wavelength, QE_g)
-    photons_b = sensor.power_to_photons(P_I, wavelength, QE_b)
+        mask = dist_from_center <= radius
+        return mask
 
-    high_res_x, high_res_y = X.shape
+    for P in range(60, 250, 10):
 
-    # Integrate photons over pixels for each color channel
-    integrated_photons_r = sensor.integrate_photons(photons_r, high_res_x, high_res_y)
-    integrated_photons_g = sensor.integrate_photons(photons_g, high_res_x, high_res_y)
-    integrated_photons_b = sensor.integrate_photons(photons_b, high_res_x, high_res_y)
+        wavelength = 0.000000785  # Example wavelength in meters (785 nm)
+        theta = 0.028  # Example divergence angle in radians
+        n = 1.5  # Example refractive index
+        d = 0.004  # Example distance from aperture to CMOS imaging plane center in meters
+        f = 0.013  # Example focal length in meters
+        z = 0.35  # Example distance from the beam waist in meters
+        t = 0.003  # Example lens thickness in meters
+        r_a = 0.0072  # Example aperture radius in meters
 
-    # Normalize to RGB values
-    rgb_values = sensor.normalize_to_rgb(integrated_photons_r, integrated_photons_g, integrated_photons_b)
+        laser_model = LaserModel(P, wavelength, theta, n, d, f, t)
+        X, Y, P_I = laser_model.annular_interference_pattern(r_a, z)
 
-    # Save the RGB image
-    output_dir = "../data/laser_images"
-    os.makedirs(output_dir, exist_ok=True)
-    filename = os.path.join(output_dir, f"laser_{int(P)}.png")
-    imageio.imwrite(filename, rgb_values)
+        # Sensor parameters
+        sensor_width = 0.001024  # Sensor width in meters
+        sensor_height = 0.001024  # Sensor height in meters
+        pixel_size = 1e-6  # Pixel size in meters (1.0µm)
+        QE_r = 0.33  # Quantum Efficiency for red
+        QE_g = 0.14  # Quantum Efficiency for green
+        QE_b = 0.23  # Quantum Efficiency for blue
+        exposure_time = 1 / 30  # Example exposure time in seconds
+        scale_factor = P / 200
 
-    # # Display the RGB image
-    # plt.figure(figsize=(16, 16))
-    # plt.imshow(rgb_values, origin='lower')
-    # plt.colorbar(label='Intensity')
-    # plt.xlabel('X (pixels)')
-    # plt.ylabel('Y (pixels)')
-    # plt.title('Laser Interference Pattern as RGB Values')
-    # plt.show()
+        sensor = CMOSSensor(sensor_width, sensor_height, pixel_size, QE_r, QE_g, QE_b, exposure_time, scale_factor)
+
+        # Convert power to photon counts for each color channel
+        photons_r = sensor.power_to_photons(P_I, wavelength, QE_r)
+        photons_g = sensor.power_to_photons(P_I, wavelength, QE_g)
+        photons_b = sensor.power_to_photons(P_I, wavelength, QE_b)
+
+        high_res_x, high_res_y = X.shape
+
+        # Integrate photons over pixels for each color channel
+        integrated_photons_r = sensor.integrate_photons(photons_r, high_res_x, high_res_y)
+        integrated_photons_g = sensor.integrate_photons(photons_g, high_res_x, high_res_y)
+        integrated_photons_b = sensor.integrate_photons(photons_b, high_res_x, high_res_y)
+
+        # Normalize to RGB values
+        rgb_values = sensor.normalize_to_rgb(integrated_photons_r, integrated_photons_g, integrated_photons_b)
+
+        height, width, channels = 1024, 1024, 3
+        laser_circles2 = np.zeros((height, width, channels), np.float64)
+        i = 1
+        radiuses = (93, 153, 215, 349, 510)
+        masks = []
+        for rs in radiuses:
+            mask1 = create_circle_mask(height, width, radius=rs)
+            masks.append(mask1)
+
+        for mask in masks:
+            masked_image = rgb_values.copy()
+            for channel in range(channels):
+                masked_image[:, :, channel][~mask] = 0
+            laser_circles2 += (masked_image * i)
+            i = i / 1.2
+
+        # Save the RGB image
+        output_dir = "../data/laser_images"
+        os.makedirs(output_dir, exist_ok=True)
+        filename = os.path.join(output_dir, f"laser_{int(P)}.png")
+        laser_circles2_capped = np.clip(laser_circles2, 0, 255).astype(np.uint8)
+        imageio.imwrite(filename, laser_circles2_capped)
