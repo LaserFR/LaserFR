@@ -8,7 +8,7 @@ from sklearn.svm import SVC
 from PIL import Image
 
 
-class FaceClassifier:
+class ContinualAttack:
     def __init__(self, data_dir, model, classifier_filename, use_split_dataset=False,
                  test_data_dir=None, mode='TRAIN', batch_size=10, image_size=160, seed=666,
                  min_nrof_images_per_class=10, nrof_train_images_per_class=5):
@@ -201,6 +201,8 @@ class FaceClassifier:
                         remaining_attacker_paths = attacker_paths[1:]
                         remaining_attacker_embs = attacker_embs[1:]
 
+                        classified_count = 1  # Counting initially classified attacker
+
                         all_classified = True
                         for i in range(len(remaining_attacker_paths)):
                             prediction = model.predict_proba([remaining_attacker_embs[i]])
@@ -211,18 +213,19 @@ class FaceClassifier:
                                 print(
                                     f'Attacker {i + 1} classified as {self.class_names[best_class_index]} with probability {best_class_probability:.3f}')
                                 self.train_set[initial_attacker_label].image_paths.append(remaining_attacker_paths[i])
+                                classified_count += 1
                                 all_classified = False
 
                         # Retrain the classifier with the newly classified attackers
                         self.train()
 
-            print(f'Retraining round {round_counter} completed')
+            print(f'Retraining round {round_counter} completed, {classified_count} attackers are classified.')
 
         print(f'All attackers classified in {round_counter} rounds')
 
 
 if __name__ == '__main__':
-    classifier = FaceClassifier(
+    classifier = ContinualAttack(
         data_dir='Z:\data\lfw_funneled',  # Directory for training data
         model='../Models/20180402-114759.pb',   # Path to the pre-trained FaceNet model
         classifier_filename='../Models/classifier.pkl',  # Path to save the trained classifier

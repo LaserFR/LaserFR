@@ -1,5 +1,4 @@
 import boto3
-import json
 import os
 import pandas as pd
 
@@ -8,7 +7,7 @@ class CelebritiesRecognition:
 
     def __init__(self, path):
         # Initialize the CelebritiesRecognition class
-        # Set up the Amazon Rekognition client and the path to the directory containing images
+        # Set up the Amazon Rekognition client and the path to the directory containing attacker images
         self.client = boto3.client('rekognition')
         self.path = path
 
@@ -20,16 +19,8 @@ class CelebritiesRecognition:
         with open(photo, 'rb') as image:
             response = self.client.recognize_celebrities(Image={'Bytes': image.read()})
 
-        # print(f'Detected faces for {photo}')
-
         # Parses the response to extract and print celebrity details such as name, ID, confidence, and related URLs
         for celebrity in response['CelebrityFaces']:
-            print(f'Name: {celebrity["Name"]}')
-            print(f'Id: {celebrity["Id"]}')
-            print(f'Confidence: {celebrity["MatchConfidence"]}')
-            print('Info:')
-            for url in celebrity['Urls']:
-                print(f'   {url}')
             # Store the relevant details of the celebrity found
             found = [os.path.basename(photo), celebrity['Name'], celebrity['MatchConfidence'], celebrity['Urls']]
 
@@ -39,17 +30,17 @@ class CelebritiesRecognition:
     def main(self):
         results = []
         # Get a list of all image files in the directory
-        filelist = [os.path.join(root, file) for root, dirs, files in os.walk(self.path) for file in files]
-        # print(filelist)
+        file_list = [os.path.join(root, file) for root, dirs, files in os.walk(self.path) for file in files]
 
         # Calls the recognize_celebrities method for each image file
-        for people in filelist:
-            # print(people)
+        for people in file_list:
+
             photo = people
             celeb_count, result = self.recognize_celebrities(photo)
             # If any celebrities are detected in an image, the results are appended to a list.
             if celeb_count >= 1:
                 print(f'Celebrities detected: {celeb_count}')
+                print(f'{os.path.splitext(result[0])[0]} is recognized as {result[1]} with confidence score {result[2]}')
                 results.append(result)
 
         # Converts the results list to a pandas DataFrame,
