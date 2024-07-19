@@ -147,7 +147,7 @@ if __name__ == '__main__':
 
     psas_selected_images_path = os.path.normpath(os.path.join('..', 'selected_data', 'psas_selected_images'))
     synthetic_attackers_path = os.path.normpath(os.path.join('..', 'data', 'synthetic_attackers'))
-    targets_base_path = '../data/ttt'
+    targets_base_path = '../data/I-100'
 
     # Create AttackInformer instance and run untargeted attack
 
