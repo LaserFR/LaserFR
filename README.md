@@ -32,7 +32,7 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
      Contains the original and simulated images of attackers and the the original targets.
      And the laser images and the real-world captured images.
    
-   - **models/**  
+   - **Models/**  
      Stores the FR models and corresponding parameters used in the project.
    
    - **selected_data/**  
@@ -43,6 +43,11 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
 
    - **deepface/**  
      Using the original deepface platform directly in our project could lead to compatibility issues and errors during large-scale testing. We have made modifications to the original version to tailor it to our testing needs. The modified version suitable for our testing is available in this directory.
+
+   - **preparation/**  
+      `LFWPicker.py` is for preparing the LFW dataset used in our tests.
+     
+      `ModelsDownloader.py` is for downloading the pre-trained models used in deepface.
    
    - **src/**  
      Contains the source code for the project.
@@ -51,7 +56,7 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
       2. **Merging Images**: Implemented in `image_merge.py`.
       3. **Filters Implementation**: Implemented in `filters.py`.
       4. **Attack Simulation**: Implemented in `face_recognition.py`.
-      5. **LFWDownloader**: prepare the LFW dataset.
+         
    
    - **tests/**  
      Includes tests that are used for the paper.
@@ -70,7 +75,7 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
 
 #### Prerequisites
 
-We run our test under Windows 10. To ensure overall project compatibility, all testing is conducted on CPU. While GPU configurations may accelerate some modules, they have not undergone complete testing.
+We run our test under Windows 10 and 11. To ensure overall project compatibility, all testing is conducted on CPU. While GPU configurations may accelerate some modules, they have not undergone complete testing.
 
 #### Installation
 
