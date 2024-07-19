@@ -64,7 +64,7 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
 
 #### Prerequisites
 
-We run our test under Windows 10. The code can run with just the CPU. If you have a GPU, the code may be accelerated.
+We run our test under Windows 10. To ensure overall project compatibility, all testing is conducted on CPU. While GPU configurations may accelerate some modules, they have not undergone complete testing.
 
 #### Installation
 
@@ -97,7 +97,13 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
    We need to take the attackers' original photo wearing the customized glasses, the laser is turned off. And then put the images in the `data/attackers`. The attackers' images should be placed under the folder named after the attacker.
 
+3. prepare the pre-trained models used in the project.
    
+  - Download the parameters for [ArcFace](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
+
+  - Run `ModelsDowndloader.py` first to get the pre-trained model ready.
+
+
 ### 3.2 Genenerate laser images
 
 Based on the parameters of the targeted camera and the infrared laser used, laser images can be generated under different laser powers.
@@ -120,8 +126,6 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
    - Implementation of enhanced research of Section 5.3.4 and achieved in `filters.py`.
 
-   - Download the parameters for [ArcFace](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
-
    - Run `filters.py`. For targeted impersonation, if the target is only one, the selected attackers for the target will be printed in the terminal. The results will be saved as `targeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
    - For untargeted impersonation, attackers who can achieve the untargeted attack will be printed in the terminal, and The results will be saved as `untargeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
 
@@ -131,8 +135,6 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 Verify if an untargeted attack can succeed without running a synthetic attack, and select the predictable target for predictable untargeted impersonation and the optimal attacker for a targeted impersonation attack with reduced computation workload.
 
    - Implementation of attack simulation of Section 5.3, and test for Section 6.3, Section 6.4, and Section 7.2. And achieved in `face_recognition.py`.
-
-   - Run `ModelsDowndloader.py` first to get the pre-trained model ready.
      
    - Run `face_recognition.py`, the results will be saved in the `results/***_impersonation_results.csv` file.
 
