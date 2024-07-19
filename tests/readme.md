@@ -9,7 +9,6 @@ This class utilizes the Amazon Rekognition service to recognize celebrities in i
 
 2. **Directory Structure**:
    - Place your images in the `data/real_images` directory.
-   - Ensure the `results` directory exists or the code will create it before saving the CSV.
 
 3. **Run the Script**:
    - Execute the script in a Python environment:
@@ -30,9 +29,6 @@ This class utilizes the Amazon Rekognition service to recognize celebrities in i
 - **AWS Rekognition Costs**:
   - Be aware that using Amazon Rekognition incurs costs. Check AWS pricing for details.
   
-- **Image Formats**:
-  - Ensure your images are in a format supported by Amazon Rekognition (JPEG or PNG).
-
 - **Error Handling**:
   - The current implementation does not include error handling to manage issues like network errors, unsupported file formats, etc. We will add them in the later version.
 
@@ -52,7 +48,7 @@ This class uses TensorFlow and the FaceNet model to perform continual attack tes
    
    - The targeted dataset is the `lfw_funneled` saved in the `data` directory.
      
-   - The attacker dataset is the `/data/synthetic_attackers`
+   - The attacker dataset is the `/data/real_images`
 
 4. **Run the Script**:
    - Execute the script in a Python environment:
@@ -72,7 +68,7 @@ This class uses TensorFlow and the FaceNet model to perform continual attack tes
 ## Important Notes
 
 - **FaceNet Model**:
-  - Ensure you have the pre-trained FaceNet model. Download it if necessary. Since FaceNet is built on TensorFlow 1.x, there may be numerous compatibility issues. Therefore, we recommend running it on a CPU instead of a GPU.
+  Since FaceNet is built on TensorFlow 1.x, there may be numerous compatibility issues. Therefore, we recommend running it on a CPU instead of a GPU. And we modified the original `facenet.py` to solve the compatibility issues.
 
 # 3. DodgingDoS
 
@@ -83,19 +79,19 @@ This class uses the MTCNN and InceptionResnetV1 models from the `facenet-pytorch
 2. **Directory Structure**:
    - Place your original attacker images in the `original_data_dir` directory (e.g., data/attackers).
    - Place your synthetic attacker images in the `synthetic_data_dir` directory (e.g., data/synthetic_attackers).
-   - Place the images in denylist in the `db_data_dir` directory (e.g., data/lfw_randowm100).
+   - Place the images in denylist in the `db_data_dir` directory (e.g., data/I-100).
 
 3. **Run the Script**:
    - Execute the script in a Python environment:
      ```bash
      python dodgings.py
      ```
-   - the total results are saved to `results/id_dodging.csv` and `results/db_dodging.csv` for identity dodging and database dodging, respectively.
+   - the final results are saved to `results/id_dodging.csv` and `results/db_dodging.csv` for identity dodging and database dodging, respectively.
 
 ## Example of How to Use the Code
 
 - **`if __name__ == '__main__':`**:
-  - Specifies the directories for original and synthetic attacker images, and the denylist.
+  - Specifies the directories for original and synthetic attacker images and the denylist.
   - Creates an instance of the `DodgingDoS` class with the specified directories.
   - Calls the `analyze_attackers` method to analyze the images and get the results.
   - Saves the results to a CSV file using the `save_results` method.
@@ -104,7 +100,7 @@ This class uses the MTCNN and InceptionResnetV1 models from the `facenet-pytorch
   - The threshold value for detecting dodging attempts is set to 1.242 by default, which is from the [FaceNet paper](https://arxiv.org/abs/1503.03832) (tested with LFW). Adjust this value as needed based on your requirements.
 
 
-# 4. Real-Time Face Recognition with DeepFace
+# 4. Real-Time Face Recognition with deepface
 
 This script uses the DeepFace library to perform real-time face recognition using a webcam. The script allows you to specify the model, distance metric, and other parameters for the recognition process.
 
