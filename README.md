@@ -120,6 +120,8 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
    - Implementation of enhanced research of Section 5.3.4 and achieved in `filters.py`.
 
+   - Download the parameters for [ArcFace](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
+
    - Run `filters.py`. For targeted impersonation, if the target is only one, the selected attackers for the target will be printed in the terminal. The results will be saved as `targeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
    - For untargeted impersonation, attackers who can achieve the untargeted attack will be printed in the terminal, and The results will be saved as `untargeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
 
