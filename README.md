@@ -77,6 +77,8 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
 
 We run our test under Windows 10 and 11. To ensure overall project compatibility, all testing is conducted on CPU. While GPU configurations may accelerate some modules, they have not undergone complete testing.
 
+The Python versions we tested are 3.9 and 3.10.
+
 #### Installation
 
 Step-by-step instructions to install the necessary dependencies and set up the project:
