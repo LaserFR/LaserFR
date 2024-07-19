@@ -102,7 +102,7 @@ class DodgingDoS:
 if __name__ == '__main__':
     original_data_dir = '../data/attackers'
     synthetic_data_dir = '../data/synthetic_attackers'
-    db_data_dir = 'E:\lfw_funneled_random\croppedrandom_100'
+    db_data_dir = '../data/I-100'
     analyzer = DodgingDoS(original_data_dir, synthetic_data_dir, db_data_dir)
     results = analyzer.dodging()
     save_results(results, '../results/id_dodging.csv')
