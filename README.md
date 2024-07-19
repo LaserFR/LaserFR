@@ -126,7 +126,11 @@ Based on the parameters of the targeted camera and the infrared laser used, lase
 
    - Implementation of Section 5.1 and achieved in `laser_generation.py`.
      
-   - Run `laser_generation.py`, the generated laser images will be saved in the `data/laser_images/`. You can check them here and the images are named ending with power value。 
+   - Run `laser_generator.py`, the generated laser images will be saved in the `data/laser_images/`. You can check them here and the images are named ending with power value.
+
+     ```bash
+      cd ../src
+      py laser_generator.py
 
 ### 3.3 Image merge
 
@@ -135,6 +139,9 @@ Merge the attackers and the laser images to generate synthetic attack images.
    - Implementation of Section 5.2 and achieved in `image_merge.py`.
 
    - Run `image_merge.py`, the attackers in the `data/attackers` will be merged with the laser images from the previous approach. The synthetic attack images will be saved in `data/synthetic_attackers/`.
+
+      ```bash
+      py image_merge.py
 
 ### 3.4 Filters
 
