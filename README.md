@@ -120,7 +120,6 @@ Step-by-step instructions to install the necessary dependencies and set up the p
     ```bash
       py preparation/ModelsDownloader.py
 
-
 ### 3.2 Genenerate laser images
 
 Based on the parameters of the targeted camera and the infrared laser used, laser images can be generated under different laser powers.
