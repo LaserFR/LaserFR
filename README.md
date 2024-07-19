@@ -36,8 +36,11 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
    - **selected_data/**  
      Includes images that the filters have filtered out.
 
-   - **results/**  
+   - **results/**
      Save the results for different attacks.
+
+   - **deepface/**
+     Using the original deepface platform directly in our project could lead to compatibility issues and errors during large-scale testing. We have made modifications to the original version to tailor it to our testing needs. The modified version suitable for our testing is available in this directory.
    
    - **src/**  
      Contains the source code for the project.
@@ -46,6 +49,7 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
       2. **Merging Images**: Implemented in `image_merge.py`.
       3. **Filters Implementation**: Implemented in `filters.py`.
       4. **Attack Simulation**: Implemented in `face_recognition.py`.
+      5. **LFWDownloader**: prepare the LFW dataset.
    
    - **tests/**  
      Includes tests that are used for the paper.
@@ -101,7 +105,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    
   - Download the parameters for [ArcFace](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
 
-  - Run `ModelsDowndloader.py` first to get the pre-trained model ready.
+  - Run `src/ModelsDowndloader.py` first to get the pre-trained model ready.
 
 
 ### 3.2 Genenerate laser images
