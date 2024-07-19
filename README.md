@@ -93,8 +93,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    ```bash
    pip install -r requirements.txt
 
- As we tested our attack using [FaceNet](https://github.com/davidsandberg/facenet), [facenet-pytorch](https://github.com/timesler/facenet-pytorch), and [deepface](https://github.com/serengil/deepface). Please ensure these libraries have the same version listed in requirements.txt, as we noticed that the deepface just released a significant version update.
-
+ As we tested our attack using [FaceNet](https://github.com/davidsandberg/facenet), [facenet-pytorch](https://github.com/timesler/facenet-pytorch), and [deepface](https://github.com/serengil/deepface). Please ensure that these libraries are installed with the same versions listed in requirements.txt, as we have observed that deepface has recently released a major version update.
 
 ## 3. Usage
 
