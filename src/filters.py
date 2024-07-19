@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 import torch
 
-from Models.model_FaceNet import inception_resnet_v1
-from Models.model_ArcFace import resnet152
-from Models.model_VGGface import resnet50
-from Models.model_SFace import Inception_v3
-from Models.model_DeepFace import deepID
+from LaserFR.Models.model_FaceNet import inception_resnet_v1
+from LaserFR.Models.model_ArcFace import resnet152
+from LaserFR.Models.model_VGGface import resnet50
+from LaserFR.Models.model_SFace import Inception_v3
+from LaserFR.Models.model_DeepFace import deepID
 
 from deepface.commons import distance
 import shutil
@@ -336,7 +336,7 @@ class ExplanationGenerator:
 
         # Clear CUDA cache to free up memory
 
-        del decomposition
+        # del decomposition
         torch.cuda.empty_cache()
 
         associated_names = {}
@@ -385,7 +385,7 @@ if __name__ == '__main__':
     df.to_csv(path, index=False)
     print(f'The result is saved in the {path}')
 
-    print('Attackers for the target have been selected.')
+    print('--------------------------')
 
     # run untargeted impersonation filters
     print('running filters for attackers for untargeted attack')
@@ -396,19 +396,19 @@ if __name__ == '__main__':
     selected_names1 = eg.psas_filter(selected_pairs1, move=False, mode='untargeted')
 
     data1 = []
-    for name_1, associations in selected_names1.items():
-        base_name_1 = name_1.rsplit('.', 1)[0]
-        for name_2, dist, mean_upper, mean_lower in associations:
-            base_name_2 = name_2.rsplit('.', 1)[0]
-            data1.append((base_name_1, base_name_2, f"{dist:.3f}", f"{mean_upper:.3f}", f"{mean_lower:.3f}"))
+    for name_11, associations1 in selected_names1.items():
+        base_name_11 = name_11.rsplit('.', 1)[0]
+        for name_21, dist1, mean_upper1, mean_lower1 in associations1:
+            base_name_21 = name_21.rsplit('.', 1)[0]
+            data1.append((base_name_11, base_name_21, f"{dist:.3f}", f"{mean_upper:.3f}", f"{mean_lower:.3f}"))
     # Create the DataFrame
-    df1 = pd.DataFrame(data, columns=['Attacker', 'Target', 'Distance', 'Mean_Upper', 'Mean_Lower'])
-    printed_attackers = set()
-    for _, row in df.iterrows():
+    df1 = pd.DataFrame(data1, columns=['Attacker', 'Target', 'Distance', 'Mean_Upper', 'Mean_Lower'])
+    printed_attackers1 = set()
+    for _, row in df1.iterrows():
         attacker = row["Attacker"]
-        if attacker not in printed_attackers:
+        if attacker not in printed_attackers1:
             print(f'Attacker {attacker} can achieve untargeted impersonation by filters.')
-            printed_attackers.add(attacker)
+            printed_attackers1.add(attacker)
 
     path1 = '../results/untargeted_pairs.csv'
     df1.to_csv(path1, index=False)

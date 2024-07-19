@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from deepface import DeepFace
+from LaserFR.deepface import DeepFace
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 
@@ -69,7 +69,7 @@ class AttackInformer:
         # Perform untargeted attack analysis
         results = []
         configurations = f"{self.model_name}_{self.metric_name}_{self.backend_name}"
-
+        print(f"Running attack with configuration: {configurations}")
         with ThreadPoolExecutor() as executor:
             for attacker_name in os.listdir(self.attacker_path):
                 attacker_folder = os.path.join(self.attacker_path, attacker_name)
@@ -77,7 +77,7 @@ class AttackInformer:
                     # Process all images in the attacker folder
                     attacker_images = [os.path.join(attacker_folder, img) for img in os.listdir(attacker_folder) if
                                        os.path.isfile(os.path.join(attacker_folder, img))]
-                    print(f"Running attack with configuration: {configurations}")
+
                     future_results = executor.map(self.process_attacker_image, attacker_images)
                     results.extend(filter(lambda x: x is not None, future_results))
 
@@ -141,13 +141,13 @@ class AttackInformer:
 
 if __name__ == '__main__':
     # Set up parameters and paths
-    models = ["DeepFace", "ArcFace", "SFace"] #"VGG-Face",
+    models = ["VGG-Face", "DeepFace", "ArcFace", "SFace"]
     metrics = ["cosine", "euclidean", "euclidean_l2"]
     backends = ['mtcnn', 'opencv']
 
     psas_selected_images_path = os.path.normpath(os.path.join('..', 'selected_data', 'psas_selected_images'))
     synthetic_attackers_path = os.path.normpath(os.path.join('..', 'data', 'synthetic_attackers'))
-    targets_base_path = 'E:/lfw_funneled_random/croppedrandom_100'
+    targets_base_path = '../data/ttt'
 
     # Create AttackInformer instance and run untargeted attack
 
@@ -158,4 +158,3 @@ if __name__ == '__main__':
                 informer = AttackInformer(model, metric, backend, targets_base_path, synthetic_attackers_path)
                 # Run the targeted attack
                 informer.inform_untargeted_attack()
-

@@ -1,7 +1,5 @@
 import numpy as np
 from scipy.integrate import quad
-import matplotlib.pyplot as plt
-from skimage import exposure
 from scipy.ndimage import zoom
 import os
 import imageio

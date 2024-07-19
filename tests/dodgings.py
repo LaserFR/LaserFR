@@ -107,4 +107,5 @@ if __name__ == '__main__':
     results = analyzer.dodging()
     save_results(results, '../results/id_dodging.csv')
     inconsistencies = analyzer.db_dodging()
+    print(f'{len(inconsistencies)} in the denylist is recognized as the attacker.')
     save_inconsistencies(inconsistencies, '../results/db_dodging.csv')

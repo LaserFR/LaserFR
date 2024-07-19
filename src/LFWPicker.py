@@ -93,4 +93,5 @@ class LFWPicker:
 output_path = '../data/'
 picker = LFWPicker(dataset_path=None, output_path=output_path)  # use the dataset_path='path to existing lfw' parameter to use an
 # existing lfw instead of downloading.
-picker.generate_folder_with_identities(1000)  # Change 50 to any desired number like 50, 200, etc.
+for k in [50, 100, 200, 500, 1000]:
+    picker.generate_folder_with_identities(k)  # generate the test datasets I-K.

@@ -240,4 +240,4 @@ if __name__ == '__main__':
     classifier.classify()
 
     # To classify attackers and retrain the classifier
-    classifier.classify_attackers_and_retrain('../data/synthetic_attackers2')
+    classifier.classify_attackers_and_retrain('../data/synthetic_attackers')
