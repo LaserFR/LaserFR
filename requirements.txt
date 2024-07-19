@@ -1,5 +1,5 @@
-facenet
-facenet-pytorch
+facenet==1.0.5
+facenet-pytorch==2.6.0
 deepface==0.0.75
 tensorflow==2.8.0
 protobuf==3.20.*
