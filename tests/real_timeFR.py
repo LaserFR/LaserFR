@@ -27,7 +27,7 @@ if __name__ == '__main__':
     The embedding data will be saved as embedding.pkl in the db_path directory. 
     This allows the data to be loaded directly in the future, eliminating the need for recalculation.
     '''
-    db_path = r'E:\lfw_funneled_random\random_500'
+    db_path = r'../data/I-500'
     model_name = 'Facenet'
     distance_metric = 'euclidean_l2'
     enable_face_analysis = False
