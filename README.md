@@ -144,10 +144,11 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
    To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). 
 
 2. Run `tests/continual_attack.py` to test the continual attack. (Section 7.1)
+   replace facenet.py
 
-3. Run `tests/dodging.py` to test the dodging/DoS attack. (Section 6.2)
+4. Run `tests/dodging.py` to test the dodging/DoS attack. (Section 6.2)
    
-4. Run `tests/real_timeFR.py` to test the attack in the real world.
+5. Run `tests/real_timeFR.py` to test the attack in the real world.
   
 
 ## 4. Acknowledgment
