@@ -107,7 +107,8 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    Run `preparation/LFWPicker.py`: It will download the [lwf_funneled dataset](http://vis-www.cs.umass.edu/lfw/lfw-funneled.tgz), and generate the I-K dataset, which randomly picks K identities from the LFW dataset. The original LFW dataset and the I-K dataset will be saved in the `data/` folder. If the download link does not work, you can manually download the dataset and set the parameter of LFWPicker `dataset_path='path to existing lfw'`.
    
       ```bash
-      py preparation/LFWPicker.py
+      cd ./preparation
+      py LFWPicker.py
 
 2. Prepare the attacker dataset
 
@@ -120,7 +121,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
   - Run `preparation/ModelsDownloader.py` first to get the pre-trained model ready.
 
     ```bash
-      py preparation/ModelsDownloader.py
+      py ModelsDownloader.py
 
 ### 3.2 Genenerate laser images
 
