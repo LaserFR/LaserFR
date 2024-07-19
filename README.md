@@ -36,10 +36,10 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
    - **selected_data/**  
      Includes images that the filters have filtered out.
 
-   - **results/**
+   - **results/**  
      Save the results for different attacks.
 
-   - **deepface/**
+   - **deepface/**  
      Using the original deepface platform directly in our project could lead to compatibility issues and errors during large-scale testing. We have made modifications to the original version to tailor it to our testing needs. The modified version suitable for our testing is available in this directory.
    
    - **src/**  
