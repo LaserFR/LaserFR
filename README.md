@@ -159,7 +159,8 @@ Detailed usage instructions are provided in `tests/readme.md`.
    To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). 
 
 2. Run `tests/continual_attack.py` to test the continual attack. (Section 7.1)
-   replace facenet.py
+   
+   Replace `facenet.py` in the `\.env\Lib\site-packages\facenet\src\facenet.py` with our modified one in the `preparation/` folder to solve the compatibility issues caused by Tensorflow.
 
 4. Run `tests/dodging.py` to test the dodging/DoS attack. (Section 6.2)
    
