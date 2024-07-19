@@ -100,7 +100,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 1. prepare the targeted face dataset
    
-    Run `src/LFWPicker.py`, it will download the [lwf_funneled dataset](http://vis-www.cs.umass.edu/lfw/lfw-funneled.tgz), and generate the I-K dataset, which randomly picks K 
+    Run `preparation/LFWPicker.py`, it will download the [lwf_funneled dataset](http://vis-www.cs.umass.edu/lfw/lfw-funneled.tgz), and generate the I-K dataset, which randomly picks K 
     identities from the LFW dataset. the original LFW dataset and the I-K dataset will be saved in the `data/` folder. If the download link does not work, you can manually 
     download the dataset and set the parameter of LFWPicker `dataset_path='path to existing lfw'`.
 
@@ -112,7 +112,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    
   - Download the parameters for [ArcFace](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
 
-  - Run `src/ModelsDowndloader.py` first to get the pre-trained model ready.
+  - Run `preparation/ModelsDowndloader.py` first to get the pre-trained model ready.
 
 
 ### 3.2 Genenerate laser images
