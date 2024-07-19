@@ -129,13 +129,15 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 Verify if an untargeted attack can succeed without running a synthetic attack, and select the predictable target for predictable untargeted impersonation and the optimal attacker for a targeted impersonation attack with reduced computation workload.
 
    - Implementation of attack simulation of Section 5.3, and test for Section 6.3, Section 6.4, and Section 7.2. And achieved in `face_recognition.py`.
+
+   - Run `ModelsDowndloader.py` first to get the pre-trained model ready.
      
-   - The results will be saved in the `results/***_impersonation_results.csv` file.
+   - Run `face_recognition.py`, the results will be saved in the `results/***_impersonation_results.csv` file.
 
    
 ### 3.5 Other Tests
 
-1. Run `tests/celebritie_recognition.py` to test the black-box attack against Amazon Recognition. (Section 6.6)
+1. Run `tests/celebrities_recognition.py` to test the black-box attack against Amazon Recognition. (Section 6.6)
    
    To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). 
 
