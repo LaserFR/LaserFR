@@ -75,7 +75,7 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
 
 #### Prerequisites
 
-We run our test under Windows 10 and 11. To ensure overall project compatibility, all testing is conducted on CPU. While GPU configurations may accelerate some modules, they have not undergone complete testing.
+We run our test under Windows 10 and 11. To ensure overall project compatibility, all testing is conducted on the CPU. While GPU configurations may accelerate some modules, they have not undergone complete testing.
 
 The Python versions we tested are 3.9 and 3.10.
 
@@ -83,13 +83,15 @@ The Python versions we tested are 3.9 and 3.10.
 
 Step-by-step instructions to install the necessary dependencies and set up the project:
 
-1. Clone the repository:
+1. Create a new project and configure a virtual environment. We tested with PyCharm.
+
+2. Clone the repository:
    ```bash
    git clone https://github.com/LaserFR/LaserFR.git
-2. Navigate to the project directory:
+3. Navigate to the project directory:
    ```bash
    cd ./LaserFR
-3. Install the required dependencies:
+4. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
 
