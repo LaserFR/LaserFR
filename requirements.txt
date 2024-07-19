@@ -1,1 +1,7 @@
-
+facenet
+facenet-pytorch
+deepface==0.0.75
+tensorflow==2.8.0
+protobuf==3.20.*
+imageio
+boto3
