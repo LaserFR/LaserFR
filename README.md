@@ -9,8 +9,6 @@ As shown in the figure:
 
 ![workflow](https://github.com/LaserFR/LaserFR/blob/00e3d65e302ab07fd3f1164cd8831954541cb6ba/images/overview.png)
 
-Additionally, we provide a main Python file (main.py) that integrates all approaches into an integrated execution. This file allows the complete execution of a desired attack scenario against the FR models under study.
-
 ## 2. Table of Contents
 
 1. [Introduction](#1-introduction)
