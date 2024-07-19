@@ -115,10 +115,10 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    
   - Download the parameters for [ArcFace](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
 
-  - Run `preparation/ModelsDowndloader.py` first to get the pre-trained model ready.
+  - Run `preparation/ModelsDownloader.py` first to get the pre-trained model ready.
 
     ```bash
-      py preparation/ModelsDowndloader.py
+      py preparation/ModelsDownloader.py
 
 
 ### 3.2 Genenerate laser images
