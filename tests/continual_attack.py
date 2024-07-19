@@ -226,7 +226,7 @@ class ContinualAttack:
 
 if __name__ == '__main__':
     classifier = ContinualAttack(
-        data_dir='Z:\data\lfw_funneled',  # Directory for training data
+        data_dir='../data/lfw_funneled',  # Directory for training data
         model='../Models/20180402-114759.pb',   # Path to the pre-trained FaceNet model
         classifier_filename='../Models/classifier.pkl',  # Path to save the trained classifier
         use_split_dataset=False,
@@ -240,4 +240,4 @@ if __name__ == '__main__':
     classifier.classify()
 
     # To classify attackers and retrain the classifier
-    classifier.classify_attackers_and_retrain('../data/synthetic_attackers')
+    classifier.classify_attackers_and_retrain('../data/real_images')
