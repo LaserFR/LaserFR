@@ -6,6 +6,7 @@ This is the official implementation code for the paper "The Invisible Polyjuice 
 
 Our work involves modeling physical infrared lasers and using simulation results to guide physical attacks. The structure of our project mirrors that of the paper, where a Python script corresponds to a step. This approach facilitates step-by-step verification of our methodology and results, and reuse and repurposing by others.
 As shown in the figure:
+
 ![workflow](https://github.com/LaserFR/LaserFR/blob/main/images/github%20overflow.png)
 
 Additionally, we provide a main Python file (main.py) that integrates all approaches into an integrated execution. This file allows the complete execution of a desired attack scenario against the FR models under study.
@@ -17,9 +18,10 @@ Additionally, we provide a main Python file (main.py) that integrates all approa
    - [Description](#21-project-structure)
    - [Getting Started](#22-getting-started)
 3. [Usage](#3-usage)
-   - [Filters](#31-filters)
-   - [Laser Signal Generation](#32-laser-signal-generation)
+   - [Preparation](#31-Preparation)
+   - [Laser Signal Generation](#32-Genenerate-laser-images)
    - [Image Merge](#33-image-merge)
+   - [Filters](#34-filters)
    - [Attack Simulation](#34-attack-simulation)
    - [Other attacks](#35-other-tests)
 4. [Acknowledgement](#4-acknowledgment)
@@ -89,7 +91,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 ## 3. Usage
 
-### 3.1 Prepare for the face dataset
+### 3.1 Preparation
 
 1. prepare the targeted face dataset
    
@@ -116,7 +118,7 @@ Based on the parameters of the targeted camera and the infrared laser used, lase
      
    - Run `laser_generation.py`, the generated laser images will be saved in the `data/laser_images/`. You can check them here and the images are named ending with power value。 
 
-### 3.2 Image merge
+### 3.3 Image merge
 
 Merge the attackers and the laser images to generate synthetic attack images.
 
@@ -124,7 +126,7 @@ Merge the attackers and the laser images to generate synthetic attack images.
 
    - Run `image_merge.py`, the attackers in the `data/attackers` will be merged with the laser images from the previous approach. The synthetic attack images will be saved in `data/synthetic_attackers/`.
 
-### 3.3 Filters
+### 3.4 Filters
 
 Verify if an untargeted attack can succeed without running a synthetic attack, and select the predictable target for predictable untargeted impersonation and the optimal attacker for a targeted impersonation attack with reduced computation workload.
 
@@ -134,7 +136,7 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
    - For untargeted impersonation, attackers who can achieve the untargeted attack will be printed in the terminal, and The results will be saved as `untargeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
 
 
-### 3.4 Attack simulation
+### 3.5 Attack simulation
 
 Verify if an untargeted attack can succeed without running a synthetic attack, and select the predictable target for predictable untargeted impersonation and the optimal attacker for a targeted impersonation attack with reduced computation workload.
 
@@ -143,7 +145,7 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
    - Run `face_recognition.py`, the results will be saved in the `results/***_impersonation_results.csv` file.
 
    
-### 3.5 Other Tests
+### 3.6 Other Tests
 
 1. Run `tests/celebrities_recognition.py` to test the black-box attack against Amazon Recognition. (Section 6.6)
    
