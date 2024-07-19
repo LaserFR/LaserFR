@@ -152,6 +152,8 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
    
 ### 3.6 Other Tests
 
+Detailed usage instructions are provided in `tests/readme.md`.
+
 1. Run `tests/celebrities_recognition.py` to test the black-box attack against Amazon Recognition. (Section 6.6)
    
    To run this test, you need to configure your Boto3 credentials on AWS. You can refer to the [official document](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html). 
