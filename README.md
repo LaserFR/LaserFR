@@ -149,7 +149,10 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
    - Implementation of enhanced research of Section 5.3.4 and achieved in `filters.py`.
 
-   - Run `filters.py`. For targeted impersonation, if the target is only one, the selected attackers for the target will be printed in the terminal. The results will be saved as `targeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
+   - Run `filters.py` in the IDE.
+     
+   - For targeted impersonation, if the target is only one, the selected attackers for the target will be printed in the terminal. The results will be saved as `targeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
+     
    - For untargeted impersonation, attackers who can achieve the untargeted attack will be printed in the terminal, and The results will be saved as `untargeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
 
 
