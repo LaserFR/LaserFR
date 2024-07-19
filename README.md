@@ -7,7 +7,7 @@ This is the official implementation code for the paper "The Invisible Polyjuice 
 Our work involves modeling physical infrared lasers and using simulation results to guide physical attacks. The structure of our project mirrors that of the paper, where a Python script corresponds to a step. This approach facilitates step-by-step verification of our methodology and results, and reuse and repurposing by others.
 As shown in the figure:
 
-![workflow](https://github.com/LaserFR/LaserFR/blob/main/images/github%20overflow.png)
+![workflow](https://github.com/LaserFR/LaserFR/blob/00e3d65e302ab07fd3f1164cd8831954541cb6ba/images/overview.png)
 
 Additionally, we provide a main Python file (main.py) that integrates all approaches into an integrated execution. This file allows the complete execution of a desired attack scenario against the FR models under study.
 
