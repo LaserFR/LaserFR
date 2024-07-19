@@ -1,6 +1,6 @@
 # 1. Celebrities Recognition
 
-This class utilizes the Amazon Rekognition service to recognize celebrities in images stored in a specified directory.
+This class utilizes the Amazon Rekognition service to recognize celebrities to achieve the black-box attack tests.
 
 ## Usage
 
@@ -106,28 +106,20 @@ This script uses the DeepFace library to perform real-time face recognition usin
 
 ## Usage
 
-1. **Install DeepFace**:
-   - Ensure you have the DeepFace library installed. You can install it via pip:
-     ```bash
-     pip install deepface
-     ```
-2. **Replace the realtime.py file**
-    Find the realtime.py file in the 'common' folder in the deepface, and replace it with our realtime.py file to support embedding saving and loading, and a more natural face recognition approach.
-   
-2. **Prepare the Database**:
-   - Place the face database in the directory specified by db_path.
+1. **Prepare the Database**:
+   - Place the face database in the directory specified by `db_path`.
 
-3. **Run the Script**:
+2. **Run the Script**:
    - Execute the script in a Python environment:
      ```bash
      python real_timeFR.py
      ```
-   - This will start the real-time face recognition stream using your default webcam.
+   - This will start the real-time face recognition stream using your default webcam. 
 
 ## Example of How to Use the Code
 
 - **`if __name__ == '__main__':`**:
-  - `db_path` (str): Path to the directory containing the database of known faces.
+  - `db_path` (str): Path to the directory containing the database of known faces (e.g., data/I-1000).
   - `model_name` (str): Name of the model to use for face recognition (e.g., 'Facenet').
   - `distance_metric` (str): Distance metric to use for face comparison (e.g., 'euclidean_l2').
   - `enable_face_analysis` (bool): Whether to enable additional face analysis (age, gender, emotion) (default is `False`).
@@ -136,11 +128,11 @@ This script uses the DeepFace library to perform real-time face recognition usin
 ## Important Notes
 
 ### Embedding Data
-- The embedding data will be saved as `embedding.pkl` in the `db_path` directory. This allows the data to be loaded directly in the future, eliminating the need for recalculation.
+- We have modified the `realtime.py` file in the deepface to support embedding saving and loading. So after running the script the first time, The embedding data will be saved as `embedding.pkl` in the `db_path` directory. This allows the data to be loaded directly in the future, eliminating the need for recalculation.
   But for a new data path, the embeddings need to be recalculated and saved.
 
 ### Face Detection and Analysis
-- The script uses the MTCNN backend for face detection and the specified model for face recognition. You can test with different backends, FR models, and distance metrics supported by [deepface](https://github.com/serengil/deepface). Additional face analysis (age, gender, emotion) can be enabled if required.
+-  You can test with different backends, FR models, and distance metrics supported by [deepface](https://github.com/serengil/deepface). Additional face analysis (age, gender, emotion) can be enabled if required.
 
 ### Webcam Source
 - The script uses the default webcam (source `0`). You can change the source if you have multiple webcams or other video sources.
