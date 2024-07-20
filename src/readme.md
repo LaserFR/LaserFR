@@ -58,9 +58,9 @@ This script conducts the ES filter and PSAS filter. So that we do not need to ru
 
 - **`if __name__ == '__main__':`**:
   - Creates an instance of the `ExplanationGenerator` class.
-  - Calls the `es_filter` method to filter theMany images.
-  - Calls the `psas_filter` method to filter the images got by es_filter.
-  - Save the results in a CSV file for further analysis.
+  - For the targeted attack, set the `theOne' path pointing to `data/theOne' where placing the selected target. If want to test with multiple targets, point the path to the targets (e.g., data/I-50). The `theMany' path points to the attackers available.
+  - For the untargeted attack, set the `theOne1' path pointing to `data/theOne' where placing the selected attacker. If want to test with multiple attackers, point the path to the attacker's set (e.g., data/attackers). The `theMany1' path points to the available attackers.
+  - Results in CSV files are saved for further analysis, `/results/targeted_pairs.csv` and `/results/untargeted_pairs.csv`, respectively.
 
    If the `move` option of the ES filter is True, a folder named `es_selected_images` will be created to save the filtered images. 
    Similarly, if the `move` option of the PSAS filter is True, a folder named `psas_selected_images` will be created to save the filtered images. 
