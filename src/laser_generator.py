@@ -307,6 +307,6 @@ if __name__ == '__main__':
         # Save the RGB image
         output_dir = "../data/laser_images"
         os.makedirs(output_dir, exist_ok=True)
-        filename = os.path.join(output_dir, f"laser_{int(P)}.png")
+        filename = os.path.join(output_dir, f"_{int(P)}.png")
         laser_circles2_capped = np.clip(laser_circles2, 0, 255).astype(np.uint8)
         imageio.imwrite(filename, laser_circles2_capped)

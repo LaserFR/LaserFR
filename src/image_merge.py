@@ -100,12 +100,12 @@ class LaserFaceMerger:
 # Example usage
 if __name__ == '__main__':
 
-    face_image_path = '../data/attackers'
+    face_image_path = '../data/attackers_original'
     laser_images_path = '../data/laser_images'
     center_coords = (545, 973)  # Center coordinates (x, y) of face image
     output_folder = '../data/synthetic_attackers'
 
-    merger = LaserFaceMerger(alpha=255, laser_intensity=1.0)
+    merger = LaserFaceMerger(alpha=255, laser_intensity=1.2)
     for face_name in os.listdir(face_image_path):
         face_folder_path = os.path.join(face_image_path, face_name)
         if os.path.isdir(face_folder_path):

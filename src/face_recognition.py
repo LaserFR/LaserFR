@@ -2,7 +2,6 @@ import os
 import pandas as pd
 from LaserFR.deepface import DeepFace
 from concurrent.futures import ThreadPoolExecutor
-from functools import partial
 
 
 class AttackInformer:
@@ -92,10 +91,10 @@ class AttackInformer:
 
     def inform_targeted_attack(self):
         # Perform targeted attack analysis
-        csv_path = '../results/selected_pairs_1000.csv'
+        csv_path = '../results/'+self.model_name+'_targeted_pairs.csv'
         df_pairs = pd.read_csv(csv_path)
 
-        results, results_matching, results_lowest = [], [], []
+        results, results_matching = [], []
 
         with ThreadPoolExecutor() as executor:
             # Process each target-attacker pair in parallel
@@ -106,12 +105,10 @@ class AttackInformer:
                 if pair_results:
                     results.extend(pair_results[0])
                     results_matching.extend(pair_results[1])
-                    results_lowest.extend(pair_results[2])
 
         # Save different types of results
-        self.save_results(results, "new_targeted_impersonation_all_results.csv")
-        self.save_results(results_matching, "new_targeted_impersonation_matching_results.csv")
-        self.save_results(results_lowest, "new_targeted_impersonation_lowest_results.csv")
+        self.save_results(results, self.model_name + "_targeted_impersonation_all_results.csv")
+        self.save_results(results_matching, self.model_name + "_targeted_impersonation_matching_results.csv")
 
     def process_pair(self, target_name, attacker_name):
         # Process a single target-attacker pair
@@ -147,7 +144,7 @@ if __name__ == '__main__':
 
     psas_selected_images_path = os.path.normpath(os.path.join('..', 'selected_data', 'psas_selected_images'))
     synthetic_attackers_path = os.path.normpath(os.path.join('..', 'data', 'synthetic_attackers'))
-    targets_base_path = '../data/I-100'
+    targets_base_path = '../data/I-200'
 
     # Create AttackInformer instance and run untargeted attack
 
@@ -158,3 +155,7 @@ if __name__ == '__main__':
                 informer = AttackInformer(model, metric, backend, targets_base_path, synthetic_attackers_path)
                 # Run the targeted attack
                 informer.inform_untargeted_attack()
+
+    for model in models:
+        informer = AttackInformer(model, "euclidean_l2", 'mtcnn', targets_base_path, synthetic_attackers_path)
+        informer.inform_targeted_attack()
