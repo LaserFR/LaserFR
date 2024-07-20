@@ -104,8 +104,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    Run `preparation/LFWPicker.py`: It will download the [lwf_funneled dataset](http://vis-www.cs.umass.edu/lfw/lfw-funneled.tgz), and generate the I-K dataset, which randomly picks K identities from the LFW dataset. The original LFW dataset and the I-K dataset will be saved in the `data/` folder. If the download link does not work, you can manually download the dataset and set the parameter of LFWPicker `dataset_path='path to existing lfw'`.
    
       ```bash
-      cd ./preparation
-      py LFWPicker.py
+     run LFWPicker.py directly, do not run it in the terminal. The same with the following scripts.
 
 2. Prepare the attacker dataset
 
@@ -115,10 +114,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
    
   - Download the parameters for [ArcFace](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
 
-  - Run `preparation/ModelsDownloader.py` first to get the pre-trained model ready.
-
-    ```bash
-      py ModelsDownloader.py
+  - Run `preparation/ModelsDownloader.py` first to get the pre-trained model ready. 
 
 ### 3.2 Genenerate laser images
 
@@ -126,11 +122,7 @@ Based on the parameters of the targeted camera and the infrared laser used, lase
 
    - Implementation of Section 5.1 and achieved in `laser_generation.py`.
      
-   - Run `laser_generator.py`, the generated laser images will be saved in the `data/laser_images/`. You can check them here and the images are named ending with power value.
-
-     ```bash
-      cd ../src
-      py laser_generator.py
+   - Run `src/laser_generator.py`, the generated laser images will be saved in the `data/laser_images/`. You can check them here and the images are named ending with power value.
 
 ### 3.3 Image merge
 
@@ -138,10 +130,8 @@ Merge the attackers and the laser images to generate synthetic attack images.
 
    - Implementation of Section 5.2 and achieved in `image_merge.py`.
 
-   - Run `image_merge.py`, the attackers in the `data/attackers` will be merged with the laser images from the previous approach. The synthetic attack images will be saved in `data/synthetic_attackers/`.
+   - Run `src/image_merge.py`, the attackers in the `data/attackers` will be merged with the laser images from the previous approach. The synthetic attack images will be saved in `data/synthetic_attackers/`.
 
-      ```bash
-      py image_merge.py
 
 ### 3.4 Filters
 
@@ -149,7 +139,7 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
    - Implementation of enhanced research of Section 5.3.4 and achieved in `filters.py`.
 
-   - Run `filters.py` in the IDE.
+   - Run `src/filters.py` in the IDE.
      
    - For targeted impersonation, if the target is only one, the selected attackers for the target will be printed in the terminal. The results will be saved as `targeted_pairs.csv` in the `results` folder. If choose to move the images, the filtered-out images will be copied to `selected_data`.
      
@@ -162,7 +152,7 @@ Verify if an untargeted attack can succeed without running a synthetic attack, a
 
    - Implementation of attack simulation of Section 5.3, and test for Section 6.3, Section 6.4, and Section 7.2. And achieved in `face_recognition.py`.
      
-   - Run `face_recognition.py`, the results will be saved in the `results/***_impersonation_results.csv` file.
+   - Run `src/face_recognition.py`, the results will be saved in the `results/***_impersonation_results.csv` file.
 
    
 ### 3.6 Other Tests
