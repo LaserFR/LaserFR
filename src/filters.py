@@ -361,7 +361,8 @@ if __name__ == '__main__':
     theOne = 'data/I-50'
     theMany = 'data/attackers'
 
-    eg = ExplanationGenerator('ArcFace')
+    model_name = 'ArcFace'
+    eg = ExplanationGenerator(model_name)
 
     selected_pairs = eg.es_filter(theOne, theMany, move=False)
     selected_names = eg.psas_filter(selected_pairs, move=True, mode='targeted')
@@ -381,7 +382,7 @@ if __name__ == '__main__':
             attackers = ', '.join(row['Attacker'])
             print(f'The selected attackers for {row["Target"]} are {attackers}')
 
-    path = '../results/targeted_pairs.csv'  # Replace with the actual path where you save the result
+    path = '../results/' + model_name + '_targeted_pairs.csv'  # Replace with the actual path where you save the result
     df.to_csv(path, index=False)
     print(f'The result is saved in the {path}')
 
@@ -410,7 +411,7 @@ if __name__ == '__main__':
             print(f'Attacker {attacker} can achieve untargeted impersonation by filters.')
             printed_attackers1.add(attacker)
 
-    path1 = '../results/untargeted_pairs.csv'
+    path1 = '../results/' + model_name + '_untargeted_pairs.csv'
     df1.to_csv(path1, index=False)
     print(f'Detailed results are saved in {path1} for further predictable untargeted impersonation attack.')
 
