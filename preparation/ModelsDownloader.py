@@ -1,10 +1,10 @@
 import gdown
 import os
-from LaserFR.deepface.commons import functions
+from deepface.commons import functions
 import zipfile
-import requests
 
 
+home = functions.get_deepface_home()
 def VGGModel(url='https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5'):
     # -----------------------------------
 
@@ -63,3 +63,4 @@ ArcFaceModel()
 VGGModel()
 DeepFaceModel()
 SFaceModel()
+print(f'weights have been saved in {home} /.deepface/weights/')
