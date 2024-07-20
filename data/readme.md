@@ -1,6 +1,6 @@
 This folder is used to save image data:
 
-- `attackers`: Stores the original images of attackers.
+- `attackers_original`: Stores the original images of attackers used to merge with laser signals.
 - `laser_images`: Contains the simulated laser images.
 - `synthetic_attackers`: Stores the simulated attacker images with laser.
 - `theMany`: Contains faces that need to be filtered. For untargeted impersonation, these are the targets; for targeted impersonation, these are the original attackers.
