@@ -1,1 +1,1 @@
-- Videos showing how the real-time attack works.
+- Videos showing how the angle alignment works.
