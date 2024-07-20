@@ -155,7 +155,7 @@ class ContinualAttack:
                 accuracy = np.mean(np.equal(best_class_indices, labels))
                 print(f'Accuracy: {accuracy:.3f}')
 
-    def classify_attackers_and_retrain(self, attackers_dir):
+    def classify_attackers_and_retrain(self, attackers_dir, initial_attacker_index=0):
         # Iteratively classify and retrain the classifier on attacker images
         round_counter = 0
         all_classified = False
@@ -184,7 +184,6 @@ class ContinualAttack:
                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
 
                     # Select one attacker to classify initially
-                    initial_attacker_index = 0
                     initial_attacker_label = best_class_indices[initial_attacker_index]
                     initial_attacker_confidence = best_class_probabilities[initial_attacker_index]
 
@@ -201,8 +200,6 @@ class ContinualAttack:
                         remaining_attacker_paths = attacker_paths[1:]
                         remaining_attacker_embs = attacker_embs[1:]
 
-                        classified_count = 1  # Counting initially classified attacker
-
                         all_classified = True
                         for i in range(len(remaining_attacker_paths)):
                             prediction = model.predict_proba([remaining_attacker_embs[i]])
@@ -213,7 +210,12 @@ class ContinualAttack:
                                 print(
                                     f'Attacker {i + 1} classified as {self.class_names[best_class_index]} with probability {best_class_probability:.3f}')
                                 self.train_set[initial_attacker_label].image_paths.append(remaining_attacker_paths[i])
-                                classified_count += 1
+
+                                common_prefix = os.path.commonprefix(remaining_attacker_paths).rsplit('\\', 1)[0] + '\\'
+
+                                classified_count = len(attackers_dataset) - sum(
+                                    1 for path in remaining_attacker_paths if not path.startswith(common_prefix))-1
+
                                 all_classified = False
 
                         # Retrain the classifier with the newly classified attackers
@@ -239,5 +241,5 @@ if __name__ == '__main__':
     # To classify using the classifier
     classifier.classify()
 
-    # To classify attackers and retrain the classifier
-    classifier.classify_attackers_and_retrain('../data/real_images')
+    # To classify attackers and retrain the classifier, select one attacker as the initial attacker.
+    classifier.classify_attackers_and_retrain('../data/real_images', initial_attacker_index=0)
