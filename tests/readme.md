@@ -11,10 +11,8 @@ This class utilizes the Amazon Rekognition service to recognize celebrities to a
    - Place your images in the `data/real_images` directory.
 
 3. **Run the Script**:
-   - Execute the script in a Python environment:
-     ```bash
-     python celebrities_recognition.py
-     ```
+   - Execute the script in the IDE.
+   
    - This will process all images in the directory, if one attacker is recognized as a celebrity, the output will be '{attacker name} is recognized as {celebrity name} with confidence score {confidence score}'. And the total results will be saved in `results/celeb_results.csv`.
 
 ## Example Usage
@@ -40,7 +38,7 @@ This class uses TensorFlow and the FaceNet model to perform continual attack tes
 
 1. **Set Up Environment**:
    
-   - The original version of Facenet is built with TensorFlow V1.x. The code has been adjusted to compile with the new version of TensorFlow.
+   - The original version of Facenet is built with TensorFlow V1.x. The code has been adjusted to compile with the new version of TensorFlow. Make sure the original `facenet.py` has been replaced by the on in the `preparation/` folder.
      
    - Make sure the pre-trained FaceNet model [20180402-114759.pb](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) is placed in the Models folder.
 
@@ -51,10 +49,7 @@ This class uses TensorFlow and the FaceNet model to perform continual attack tes
    - The attacker dataset is the `/data/real_images`
 
 4. **Run the Script**:
-   - Execute the script in a Python environment:
-     ```bash
-     python continual_attack.py
-     ```
+   - Execute the script in the IDE.
 
 ## Example of How to Use the Code
 
@@ -82,11 +77,9 @@ This class uses the MTCNN and InceptionResnetV1 models from the `facenet-pytorch
    - Place the images in denylist in the `db_data_dir` directory (e.g., data/I-100).
 
 3. **Run the Script**:
-   - Execute the script in a Python environment:
-     ```bash
-     python dodgings.py
-     ```
-   - the final results are saved to `results/id_dodging.csv` and `results/db_dodging.csv` for identity dodging and database dodging, respectively.
+   - Execute the script in the IDE.
+     
+   - The final results are saved to `results/id_dodging.csv` and `results/db_dodging.csv` for identity dodging and database dodging, respectively.
 
 ## Example of How to Use the Code
 
@@ -110,10 +103,8 @@ This script uses the DeepFace library to perform real-time face recognition usin
    - Place the face database in the directory specified by `db_path`.
 
 2. **Run the Script**:
-   - Execute the script in a Python environment:
-     ```bash
-     python real_timeFR.py
-     ```
+   - Execute the script in the IDE.
+     
    - This will start the real-time face recognition stream using your default webcam. 
 
 ## Example of How to Use the Code
