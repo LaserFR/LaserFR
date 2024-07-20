@@ -33,7 +33,7 @@ This script simulates a laser attack on face images by merging laser images onto
 ### Example Usage
 
 - **`if __name__ == '__main__':`**:
-  - `face_image_path`: Directory containing face images. `data/attackers` by default.
+  - `face_image_path`: Directory containing face images. `data/attackers_original` by default.
   - `laser_images_path`: Directory containing laser images. `data/laser_images` by default.
   - `center_coords`: Center coordinates (x, y) of the face image means the turned-off laser's coordinates of the attacker.
     
@@ -60,7 +60,7 @@ This script conducts the ES filter and PSAS filter. So that we do not need to ru
   - Creates an instance of the `ExplanationGenerator` class.
   - For the targeted attack, set the `theOne' path pointing to `data/theOne' where placing the selected target. If want to test with multiple targets, point the path to the targets (e.g., data/I-50). The `theMany' path points to the attackers available.
   - For the untargeted attack, set the `theOne1' path pointing to `data/theOne' where placing the selected attacker. If want to test with multiple attackers, point the path to the attacker's set (e.g., data/attackers). The `theMany1' path points to the available attackers.
-  - Results in CSV files are saved for further analysis, `/results/targeted_pairs.csv` and `/results/untargeted_pairs.csv`, respectively.
+  - Results in CSV files are saved for further analysis, `/results/targeted_pairs.csv` and `/results/untargeted_pairs.csv`, respectively with the model name as a prefix.
 
    If the `move` option of the ES filter is True, a folder named `es_selected_images` will be created to save the filtered images. 
    Similarly, if the `move` option of the PSAS filter is True, a folder named `psas_selected_images` will be created to save the filtered images. 
@@ -73,10 +73,13 @@ The ExplanationGenerator class relies on pre-trained models (e.g., ResNet152 or 
 
 ## 4. Face Recognition Attack Analysis
 
-This project involves analyzing face recognition results to inform impersonation attacks using the DeepFace library. The script iterates over images of synthetic attackers and compares them with images of targets to find matches.
+- This project involves analyzing face recognition results to inform impersonation attacks using the DeepFace library. The script iterates over images of synthetic attackers and compares them with images of targets to find matches.
 When running the Python script for the first time, it will cost plenty of time. As we claimed, it time-cost task to do the embedding calculation. So the deepface platform will save the embeddings for each iamge for quick use in the following test. If the dataset is changed, it will need to recalculate and save the embeddings.
 
-deepface, functions.py enforce-detection=False
+- The untargeted attacks against 4 models with 2 preprocessing methods and 3 distance metrics will be tested, and the results will be saved in the `results/` folder tagged with the combinations. RetinaFace will raise unpredictable errors when tested recently, we removed it temporarily and will add it back in the later updates.
+
+- The targeted attack against ArcFace is conducted. The results will be saved in the `targeted_impersonation_all_results.csv`. Meanwhile, the matching results compared with the filters are also conducted and the results are saved in the `targeted_impersonation_matching_results.csv`. 
+
 
 
 
