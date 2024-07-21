@@ -112,7 +112,7 @@ Step-by-step instructions to install the necessary dependencies and set up the p
 
 2. Prepare the pre-trained models used in the project.
    
-  - Download the parameters for [ArcFace](https://drive.google.com/open?id=1YADdI8PahhpkiiHqDJmK1Bxz7VYIt_L2) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
+  - Download the parameters for [ArcFace](https://drive.google.com/file/d/1DQ26xbDqVvyNLKKGPBaaMrrbVwNwBOv4/view?usp=sharing) and copy it to the `Models/` folder. Download the [FaceNet](https://drive.google.com/open?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-) and unzip the file, put `20180402-114759.pb` under the `Models/` folder.
 
   - Run `preparation/ModelsDownloader.py` first to get the pre-trained model ready. 
 
