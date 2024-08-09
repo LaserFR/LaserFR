@@ -1,5 +1,6 @@
 This folder is used to save image data:
 
+- `attackers`: Stores the cropped images of attackers used to test in the filters.
 - `attackers_original`: Stores the original images of attackers used to merge with laser signals.
 - `laser_images`: Contains the simulated laser images.
 - `synthetic_attackers`: Stores the simulated attacker images with laser.
