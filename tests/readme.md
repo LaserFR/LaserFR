@@ -59,6 +59,25 @@ This class uses TensorFlow and the FaceNet model to perform continual attack tes
   - Calls the `classify` method to classify images using the trained classifier.
   - Calls the `classify_attackers_and_retrain` method to classify and retrain on attacker images.
   - The retraining rounds and the attackers that have been classified as the initial target are printed each round until all attackers are classified.
+ 
+    output example:
+    ```
+      Retraining round 11 completed.
+      Attacker 0 has 18 images classified as Tony Blair.
+      Attacker 1 has 0 images classified as Tony Blair.
+      Attacker 2 has 0 images classified as Tony Blair.
+      Attacker 3 has 1 images classified as Tony Blair.
+      Attacker 4 has 1 images classified as Tony Blair.
+      Attacker 5 has 1 images classified as Tony Blair.
+      Attacker 7 has 16 images classified as Tony Blair.
+      Attacker 8 has 0 images classified as Tony Blair.
+      Attacker 9 has 0 images classified as Tony Blair.
+      Attacker 10 has 0 images classified as Tony Blair.
+      Attacker 11 has 0 images classified as Tony Blair.
+      Attacker 12 has 2 images classified as Tony Blair.
+      Attacker 13 has 0 images classified as Tony Blair.
+      Attacker 14 has 0 images classified as Tony Blair.
+    ```
 
 ## Important Notes
 
