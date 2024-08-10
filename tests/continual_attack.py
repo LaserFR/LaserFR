@@ -173,7 +173,7 @@ class ContinualAttack:
                     attackers_dataset = facenet.get_dataset(attackers_dir)
                     for cls in attackers_dataset:
                         cls.image_paths = [path for path in cls.image_paths if self.is_image_file(path)]
-                    attacker_paths, _ = facenet.get_image_paths_and_labels(attackers_dataset)
+                    attacker_paths, attacker_labels = facenet.get_image_paths_and_labels(attackers_dataset)
                     attacker_embs = self.calculate_embeddings(sess, attacker_paths)
 
                     with open(self.classifier_filename, 'rb') as infile:
@@ -183,13 +183,16 @@ class ContinualAttack:
                     best_class_indices = np.argmax(predictions, axis=1)
                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
 
+                    # Track the number of images classified for each attacker subfolder
+                    classified_counts = {attacker: 0 for attacker in set(attacker_labels)}
+
                     # Select one attacker to classify initially
                     initial_attacker_label = best_class_indices[initial_attacker_index]
                     initial_attacker_confidence = best_class_probabilities[initial_attacker_index]
 
                     if initial_attacker_confidence > self.probability_threshold:
-                        print(
-                            f'Initial attacker classified as {self.class_names[initial_attacker_label]} with probability {initial_attacker_confidence:.3f}')
+                        print(f'Initial attacker classified as {self.class_names[initial_attacker_label]} '
+                              f'with probability {initial_attacker_confidence:.3f}')
                         self.train_set[initial_attacker_label].image_paths.append(
                             attacker_paths[initial_attacker_index])
 
@@ -199,6 +202,7 @@ class ContinualAttack:
                         # Classify remaining attackers with the new classifier
                         remaining_attacker_paths = attacker_paths[1:]
                         remaining_attacker_embs = attacker_embs[1:]
+                        remaining_attacker_labels = attacker_labels[1:]
 
                         all_classified = True
                         for i in range(len(remaining_attacker_paths)):
@@ -207,21 +211,22 @@ class ContinualAttack:
                             best_class_probability = prediction[0][best_class_index]
 
                             if best_class_index == initial_attacker_label and best_class_probability > self.probability_threshold:
-                                print(
-                                    f'Attacker {i + 1} classified as {self.class_names[best_class_index]} with probability {best_class_probability:.3f}')
+                                print(f'Attacker {i + 1} classified as {self.class_names[best_class_index]} '
+                                      f'with probability {best_class_probability:.3f}')
                                 self.train_set[initial_attacker_label].image_paths.append(remaining_attacker_paths[i])
 
-                                common_prefix = os.path.commonprefix(remaining_attacker_paths).rsplit('\\', 1)[0] + '\\'
-
-                                classified_count = len(attackers_dataset) - sum(
-                                    1 for path in remaining_attacker_paths if not path.startswith(common_prefix))-1
+                                # Update count for the classified attacker
+                                classified_counts[remaining_attacker_labels[i]] += 1
 
                                 all_classified = False
 
                         # Retrain the classifier with the newly classified attackers
                         self.train()
 
-            print(f'Retraining round {round_counter} completed, {classified_count} attackers are classified.')
+            print(f'Retraining round {round_counter} completed.')
+            for attacker_label, count in classified_counts.items():
+                print(f'Attacker {attacker_label} has {count} images classified '
+                      f'as {self.class_names[initial_attacker_label]}.')
 
         print(f'All attackers classified in {round_counter} rounds')
 
