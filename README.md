@@ -130,7 +130,7 @@ Merge the attackers and the laser images to generate synthetic attack images.
 
    - Implementation of Section 5.2 and achieved in `image_merge.py`.
 
-   - Run `src/image_merge.py`, the attackers in the `data/attackers` will be merged with the laser images from the previous approach. The synthetic attack images will be saved in `data/synthetic_attackers/`.
+   - Run `src/image_merge.py`, the attackers in the `data/attackers_original` will be merged with the laser images from the previous approach. The synthetic attack images will be saved in `data/synthetic_attackers/`.
 
 
 ### 3.4 Filters
