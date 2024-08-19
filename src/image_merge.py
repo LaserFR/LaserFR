@@ -88,7 +88,7 @@ class LaserFaceMerger:
 
             # Create output file name
             face_image_name = os.path.basename(face_image_path)
-            output_image_name = f"{os.path.splitext(face_image_name)[0]}_{os.path.splitext(laser_image_name)[0]}.jpg"
+            output_image_name = f"{os.path.splitext(face_image_name)[0]}{os.path.splitext(laser_image_name)[0]}.jpg"
             output_image_path = os.path.join(output_folder, output_image_name)
 
             # Save the result
@@ -102,7 +102,22 @@ if __name__ == '__main__':
 
     face_image_path = '../data/attackers_original'
     laser_images_path = '../data/laser_images'
-    center_coords = (545, 973)  # Center coordinates (x, y) of face image
+    center_coords = {
+    "A1": (466, 814),
+    "A2": (592, 892),
+    "A3": (541, 977),
+    "A4": (464, 904),
+    "A5": (539, 903),
+    "A6": (548, 956),
+    "A7": (493, 928),
+    "A8": (589, 806),
+    "A9": (560, 946),
+    "A10": (545, 973),
+    "A11": (643, 827),
+    "A12": (484, 887),
+    "A13": (634, 927),
+    "A14": (533, 953),
+    "A15": (516, 886)}
     output_folder = '../data/synthetic_attackers'
 
     merger = LaserFaceMerger(alpha=255, laser_intensity=1.2)
@@ -114,4 +129,5 @@ if __name__ == '__main__':
 
             for face_image_name in os.listdir(face_folder_path):
                 full_face_image_path = os.path.join(face_folder_path, face_image_name)
-                merger.simulate_laser_attack(full_face_image_path, laser_images_path, center_coords, output_face_folder)
+                attacker = face_image_name.split('.')[0]
+                merger.simulate_laser_attack(full_face_image_path, laser_images_path, center_coords[attacker], output_face_folder)
