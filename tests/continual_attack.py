@@ -161,7 +161,7 @@ class ContinualAttack:
         all_classified = False
 
         # Continues the process until all attackers are classified.
-        while not all_classified:
+        while not all_classified and round_counter <= 20:
             round_counter += 1
             with tf.compat.v1.Graph().as_default():
                 with tf.compat.v1.Session() as sess:
